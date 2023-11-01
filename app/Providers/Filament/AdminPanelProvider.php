@@ -24,6 +24,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->topNavigation()
+            ->favicon(asset('images/brandlogo_icon.ico'))
             ->brandLogo(asset('images/brandlogo.png'))
             ->brandLogoHeight('55px')
             ->brandName('Rural Health Unit Management System')

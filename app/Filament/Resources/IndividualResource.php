@@ -5,11 +5,20 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\IndividualResource\Pages;
 use App\Filament\Resources\IndividualResource\RelationManagers;
 use App\Models\Individual;
+use Carbon\Carbon;
 use CivilStatusEnum;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Table;
@@ -79,34 +88,36 @@ class IndividualResource extends Resource
                         ->closeOnDateSelection()
                         ->native(false)
                         ->required()
+                        ->suffixIcon('heroicon-o-calendar')
                         ->columnStart(6)
                         ->columnSpan(2),
 
 
                    Forms\Components\Textarea::make('address')
-                       ->rows(5)
-                       ->columnSpanFull(),
+                        ->rows(4)
+                        ->columnSpan(5),
 
+                   Forms\Components\Select::make('category_id')
+                        ->selectablePlaceholder()
+                        ->placeholder('-')
+                        ->columnSpan(2)
+                        ->createOptionForm([
+                           Forms\Components\TextInput::make('title')
+                               ->required(),
+                        ])
+                       ->createOptionAction(
+                           fn (\Filament\Forms\Components\Actions\Action $action) => $action
+                               ->modalWidth('sm')
+                               ->modalFooterActionsAlignment('end')
+                               ->tooltip('Register new category')
+                               ->modalSubmitActionLabel('Save')
+                       )
+                        ->createOptionModalHeading('Add new category')
+                        ->relationship('category', 'title')
+                        ->preload()
+                        ->searchable(),
 
-                   Forms\Components\Toggle::make('isMember')
-                       ->inline(false)
-                       ->columnSpan(2)
-                       ->onIcon('heroicon-m-check')
-                       ->live(onBlur: true)
-                       ->required(),
-
-                   Forms\Components\TextInput::make('philhealthnum')->label('Philhealth Number')
-                       ->columnSpan(3)
-                       ->columnStart(3)
-                       ->numeric()
-                       ->required(fn (Get $get): bool => $get('isMember'))
-                       ->maxLength(255),
-
-
-
-
-
-                ])->columnSpan(4)->columns(7),
+                ])->columnSpan(9)->columns(7),
 
 
 
@@ -126,10 +137,23 @@ class IndividualResource extends Resource
                         ->inputMode('decimal')
                         ->suffix('kg.')
                         ->maxLength(255),
-                ])->columnSpan(1),
+
+                    Forms\Components\Toggle::make('isMember')
+                        ->inline(false)
+                        ->onIcon('heroicon-m-check')
+                        ->live(onBlur: true)
+                        ->required(),
+
+                    Forms\Components\TextInput::make('philhealthnum')->label('Philhealth Number')
+                        ->numeric()
+                        ->required(fn (Get $get): bool => $get('isMember'))
+                        ->maxLength(255),
 
 
-            ])->columns(5);
+                ])->columnSpan(3),
+
+
+            ])->columns(12);
     }
 
     public static function table(Table $table): Table
@@ -169,6 +193,7 @@ class IndividualResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -177,6 +202,126 @@ class IndividualResource extends Resource
                 ]),
             ])
             ->deferLoading();
+    }
+
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Personal Information')
+                    ->schema([
+                        TextEntry::make('firstname')->label('Firstname')
+                            ->weight(FontWeight::Bold)
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('lastname')->label('Lastname')
+                            ->weight(FontWeight::Bold)
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('middlename')->label('Middlename')
+                            ->weight(FontWeight::Bold)
+                            ->default('-')
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('extname')->label('Ext. Name')
+                            ->weight(FontWeight::Bold)
+                            ->default('-')
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('gender')
+                            ->weight(FontWeight::Bold)
+                            ->default('-')
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('civilstatus')
+                            ->weight(FontWeight::Bold)
+                            ->default('-')
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('birthdate')
+                            ->weight(FontWeight::Bold)
+                            ->default('-')
+                            ->color('info')
+                            ->date('M d, Y')
+                            ->columnSpan(1),
+
+                        TextEntry::make('birthdate')->label('Age')
+                            ->weight(FontWeight::Bold)
+                            ->formatStateUsing(fn($state): string => Carbon::parse($state)->age)
+                            ->default('-')
+                            ->color('info')
+                            ->columnSpan(1),
+
+                        TextEntry::make('address')->label('Address')
+                            ->weight(FontWeight::Bold)
+                            ->color('info')
+                            ->columnSpan(3),
+
+
+                        TextEntry::make('category.title')->label('Category')
+                            ->weight(FontWeight::Bold)
+                            ->color('info')
+                            ->default('-')
+                            ->columnSpan(1),
+
+
+
+                    ])->columns(4)->columnSpan(9),
+
+                Fieldset::make('')->schema([
+                    ImageEntry::make('image')
+                        ->hiddenLabel()
+                        ->columnSpanFull()
+                        ->height('200px')
+                        ->defaultImageUrl(asset('images/default-image.png')),
+
+
+                    IconEntry::make('isMember')
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check-badge',
+                            '0' => 'heroicon-o-x-circle',
+
+                        })
+                        ->color(fn (string $state): string => match ($state) {
+                            '1' => 'success',
+                            '0' => 'danger',
+
+                        })
+                        ->default('-')
+                        ->columnSpanFull(),
+
+                    TextEntry::make('philhealthnum')->label('Philhealth Number')
+                        ->default('-')
+                        ->weight(FontWeight::Bold)
+                        ->color('info')
+                        ->columnSpanFull(),
+
+                    TextEntry::make('height')->label('Height (cm.)')
+                        ->default('-')
+                        ->weight(FontWeight::Bold)
+                        ->color('info')
+                        ->columnSpanFull(),
+
+                    TextEntry::make('weight')->label('Weight (kg.)')
+                        ->default('-')
+                        ->weight(FontWeight::Bold)
+                        ->color('info')
+                        ->columnSpanFull(),
+
+
+                ])->columnSpan(3)
+
+
+            ])->columns(12);
+
     }
 
     public static function getRelations(): array
@@ -192,6 +337,7 @@ class IndividualResource extends Resource
             'index' => Pages\ListIndividuals::route('/'),
             'create' => Pages\CreateIndividual::route('/create'),
             'edit' => Pages\EditIndividual::route('/{record}/edit'),
+            'view' => Pages\ViewIndividual::route('/{record}'),
         ];
     }
 }

@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('philhealthnum')->nullable();
             $table->boolean('isMember')->default(false);
             $table->string('image')->nullable();
-
+            $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable()->default(0);
             $table->timestamps();
         });
     }
