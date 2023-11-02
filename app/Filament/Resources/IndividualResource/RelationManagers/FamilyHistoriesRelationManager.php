@@ -15,10 +15,10 @@ class FamilyHistoriesRelationManager extends RelationManager
 {
     protected static string $relationship = 'family_histories';
 
-    public function isReadOnly(): bool
-    {
-        return false;
-    }
+//    public function isReadOnly(): bool
+//    {
+//        return false;
+//    }
 
 
     public function form(Form $form): Form
@@ -63,29 +63,29 @@ class FamilyHistoriesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->icon('heroicon-o-plus')
-                    ->modalWidth('md')
-                    ->modalSubmitActionLabel('Save')
-                    ->closeModalByClickingAway(false)
-                    ->modalFooterActionsAlignment(Alignment::End)
-                    ->createAnother(false)
-                    ->label('Create new family history'),
+//                Tables\Actions\CreateAction::make()
+//                    ->icon('heroicon-o-plus')
+//                    ->modalWidth('md')
+//                    ->modalSubmitActionLabel('Save')
+//                    ->closeModalByClickingAway(false)
+//                    ->modalFooterActionsAlignment(Alignment::End)
+//                    ->createAnother(false)
+//                    ->label('Create new family history'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->modalHeading('Edit Family History')
-                    ->modalWidth('md')
-                    ->closeModalByClickingAway(false)
-                    ->modalSubmitActionLabel('Save changes')
-                    ->modalFooterActionsAlignment(Alignment::End),
-
-                Tables\Actions\DeleteAction::make(),
+//                Tables\Actions\EditAction::make()
+//                    ->modalHeading('Edit Family History')
+//                    ->modalWidth('md')
+//                    ->closeModalByClickingAway(false)
+//                    ->modalSubmitActionLabel('Save changes')
+//                    ->modalFooterActionsAlignment(Alignment::End),
+//
+//                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ]);
     }
 }

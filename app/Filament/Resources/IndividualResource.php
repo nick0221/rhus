@@ -38,6 +38,8 @@ class IndividualResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'fullname';
 
+    protected static ?string $pluralModelLabel = 'Individuals';
+
     protected static int $globalSearchResultsLimit = 10;
 
     public static function form(Form $form): Form

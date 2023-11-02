@@ -12,6 +12,7 @@ class CreateIndividual extends CreateRecord
     protected static string $resource = IndividualResource::class;
 
 
+    protected ?string $heading = 'Create Profile';
 
 
 

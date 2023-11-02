@@ -18,10 +18,10 @@ class ObHistoriesRelationManager extends RelationManager
     protected static ?string $modelLabel = 'OB History';
 
 
-    public function isReadOnly(): bool
-    {
-        return false;
-    }
+//    public function isReadOnly(): bool
+//    {
+//        return false;
+//    }
 
     public function form(Form $form): Form
     {
@@ -72,24 +72,24 @@ class ObHistoriesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->icon('heroicon-o-plus')
-                    ->modalWidth('md')
-                    ->modalSubmitActionLabel('Save')
-                    ->closeModalByClickingAway(false)
-                    ->modalFooterActionsAlignment(Alignment::End)
-                    ->createAnother(false)
-                    ->label('Create new OB history'),
+//                Tables\Actions\CreateAction::make()
+//                    ->icon('heroicon-o-plus')
+//                    ->modalWidth('md')
+//                    ->modalSubmitActionLabel('Save')
+//                    ->closeModalByClickingAway(false)
+//                    ->modalFooterActionsAlignment(Alignment::End)
+//                    ->createAnother(false)
+//                    ->label('Create new OB history'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->modalHeading('Edit OB History')
-                    ->modalWidth('md')
-                    ->closeModalByClickingAway(false)
-                    ->modalSubmitActionLabel('Save changes')
-                    ->modalFooterActionsAlignment(Alignment::End),
-
-                Tables\Actions\DeleteAction::make(),
+//                Tables\Actions\EditAction::make()
+//                    ->modalHeading('Edit OB History')
+//                    ->modalWidth('md')
+//                    ->closeModalByClickingAway(false)
+//                    ->modalSubmitActionLabel('Save changes')
+//                    ->modalFooterActionsAlignment(Alignment::End),
+//
+//                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
 //                Tables\Actions\BulkActionGroup::make([

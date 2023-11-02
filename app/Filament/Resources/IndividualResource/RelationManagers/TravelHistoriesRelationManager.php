@@ -17,10 +17,10 @@ class TravelHistoriesRelationManager extends RelationManager
     protected static string $relationship = 'travel_histories';
 
 
-    public function isReadOnly(): bool
-    {
-        return false;
-    }
+//    public function isReadOnly(): bool
+//    {
+//        return false;
+//    }
 
 
     public function form(Form $form): Form
@@ -63,30 +63,30 @@ class TravelHistoriesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->icon('heroicon-o-plus')
-                    ->modalWidth('md')
-                    ->modalSubmitActionLabel('Save')
-                    ->modalFooterActionsAlignment(Alignment::End)
-                    ->createAnother(false)
-                    ->closeModalByClickingAway(false)
-                    ->successNotificationTitle('Travel history has been successfully added.')
-                    ->label('Create new travel history'),
+//                Tables\Actions\CreateAction::make()
+//                    ->icon('heroicon-o-plus')
+//                    ->modalWidth('md')
+//                    ->modalSubmitActionLabel('Save')
+//                    ->modalFooterActionsAlignment(Alignment::End)
+//                    ->createAnother(false)
+//                    ->closeModalByClickingAway(false)
+//                    ->successNotificationTitle('Travel history has been successfully added.')
+//                    ->label('Create new travel history'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->modalHeading('Edit Travel History')
-                    ->modalWidth('md')
-                    ->closeModalByClickingAway(false)
-                    ->modalSubmitActionLabel('Save changes')
-                    ->modalFooterActionsAlignment(Alignment::End),
-
-                Tables\Actions\DeleteAction::make(),
+//                Tables\Actions\EditAction::make()
+//                    ->modalHeading('Edit Travel History')
+//                    ->modalWidth('md')
+//                    ->closeModalByClickingAway(false)
+//                    ->modalSubmitActionLabel('Save changes')
+//                    ->modalFooterActionsAlignment(Alignment::End),
+//
+//                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ]);
     }
 }
