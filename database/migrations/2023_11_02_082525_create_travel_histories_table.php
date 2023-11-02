@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('travel_histories', function (Blueprint $table) {
             $table->id();
+            $table->date('dateoftravel');
+            $table->string('place');
+            $table->string('daysofstay')->nullable();
+            $table->foreignId('individual_id')->references('id')->on('individuals')->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

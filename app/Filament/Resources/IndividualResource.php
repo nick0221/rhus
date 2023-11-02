@@ -24,7 +24,9 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Table;
 use GenderEnum;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class IndividualResource extends Resource
@@ -38,12 +40,16 @@ class IndividualResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    protected static ?string $recordTitleAttribute = 'fullname';
+
+    protected static int $globalSearchResultsLimit = 10;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Section::make('Personal Information')
-                    ->description('Fill out all the required fields.')
+                    ->description('Fill out all the required(*) fields.')
                     ->schema([
                     Forms\Components\TextInput::make('firstname')
                         ->columnSpan(2)
@@ -171,7 +177,7 @@ class IndividualResource extends Resource
                     ->defaultImageUrl(asset('images/default-image.png')),
 
                 Tables\Columns\TextColumn::make('fullname')->label('Name')
-                    ->searchable(),
+                    ->searchable(['firstname', 'middlename', 'lastname', 'fullname']),
 
                 Tables\Columns\TextColumn::make('civilstatus')->label('Civil Status')
                     ->searchable(),
@@ -182,12 +188,10 @@ class IndividualResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('height')
                     ->default('-')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('weight')
                     ->default('-')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('philhealthnum')
                     ->default('-')
                     ->searchable(),
@@ -306,7 +310,7 @@ class IndividualResource extends Resource
                         ->defaultImageUrl(asset('images/default-image.png')),
 
 
-                    IconEntry::make('isMember')
+                    IconEntry::make('isMember')->label('Member')
                         ->icon(fn (string $state): string => match ($state) {
                             '1' => 'heroicon-o-check-badge',
                             '0' => 'heroicon-o-x-circle',
@@ -343,6 +347,7 @@ class IndividualResource extends Resource
         return [
             RelationManagers\PastMedicalhistoriesRelationManager::class,
             RelationManagers\FamilyHistoriesRelationManager::class,
+            RelationManagers\TravelHistoriesRelationManager::class,
         ];
     }
 
@@ -357,4 +362,16 @@ class IndividualResource extends Resource
             'view' => Pages\ViewIndividual::route('/{record}'),
         ];
     }
+
+
+
+//    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+//    {
+//        return $record->firstname;
+//    }
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return IndividualResource::getUrl('view', ['record' => $record]);
+    }
+
 }

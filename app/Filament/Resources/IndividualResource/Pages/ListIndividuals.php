@@ -13,7 +13,8 @@ class ListIndividuals extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label('Create New')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

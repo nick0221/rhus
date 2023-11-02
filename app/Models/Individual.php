@@ -52,6 +52,12 @@ class Individual extends Model
     }
 
 
+    public function travel_histories(): HasMany
+    {
+        return $this->hasMany(TravelHistory::class);
+    }
+
+
 
 
 

@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class TravelHistory extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'dateoftravel',
+        'place',
+        'daysofstay',
+        'individual_id',
+    ];
+
+
+
 }
