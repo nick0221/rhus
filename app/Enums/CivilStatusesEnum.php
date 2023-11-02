@@ -1,6 +1,7 @@
 <?php
+namespace App\Enums;
 
-enum CivilStatusEnum
+enum CivilStatusesEnum
 {
 
     const SINGLE = 'Single';

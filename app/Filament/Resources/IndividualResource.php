@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\CivilStatusesEnum;
+use App\Enums\GenderEnum;
 use App\Filament\Resources\IndividualResource\Pages;
 use App\Filament\Resources\IndividualResource\RelationManagers;
 use App\Models\Individual;
 use Carbon\Carbon;
-use CivilStatusEnum;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -17,22 +18,17 @@ use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Table;
-use GenderEnum;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class IndividualResource extends Resource
 {
     protected static ?string $model = Individual::class;
-
 
     protected static ?string $modelLabel = 'Individual Treatment';
 
@@ -87,7 +83,7 @@ class IndividualResource extends Resource
                         ->columnSpan(2)
                         ->required()
                         ->placeholder('------')
-                        ->options(CivilStatusEnum::getValues()),
+                        ->options(CivilStatusesEnum::getValues()),
 
                     Forms\Components\DatePicker::make('birthdate')
                         ->placeholder('M d, YYYY')
@@ -105,7 +101,6 @@ class IndividualResource extends Resource
                         ->columnSpan(5),
 
                    Forms\Components\Select::make('category_id')
-                        ->selectablePlaceholder()
                         ->placeholder('-')
                         ->columnSpan(2)
                         ->createOptionForm([
@@ -130,9 +125,11 @@ class IndividualResource extends Resource
 
                 Forms\Components\Section::make('')->schema([
                     Forms\Components\FileUpload::make('image')
-                        ->extraAttributes(['class' => 'mb-7'])
                         ->columnSpanFull()
-                        ->image(),
+                        ->image()
+                        ->imageEditor()
+                        ->previewable()
+                        ->directory('ind-pic'),
 
                     Forms\Components\TextInput::make('height')
                         ->numeric()
@@ -166,6 +163,7 @@ class IndividualResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'DESC')
             ->columns([
                 Tables\Columns\IconColumn::make('isMember')->label('Member')
                     ->alignCenter()
@@ -174,6 +172,7 @@ class IndividualResource extends Resource
                 Tables\Columns\ImageColumn::make('image')->label('Img')
                     ->alignCenter()
                     ->circular()
+                    ->extraImgAttributes(['loading' => 'lazy'])
                     ->defaultImageUrl(asset('images/default-image.png')),
 
                 Tables\Columns\TextColumn::make('fullname')->label('Name')
@@ -279,6 +278,7 @@ class IndividualResource extends Resource
                         TextEntry::make('address')->label('Address')
                             ->weight(FontWeight::Light)
                             ->color('info')
+                            ->default('-')
                             ->columnSpan(3),
 
 
@@ -300,36 +300,53 @@ class IndividualResource extends Resource
                             ->color('info')
                             ->columnSpan(1),
 
+
+                        IconEntry::make('isMember')->label('Member')
+                            ->icon(fn (string $state): string => match ($state) {
+                                '1' => 'heroicon-o-check-badge',
+                                '0' => 'heroicon-o-x-circle',
+
+                            })
+                            ->color(fn (string $state): string => match ($state) {
+                                '1' => 'success',
+                                '0' => 'danger',
+
+                            })
+                            ->size(IconEntrySize::ExtraLarge)
+                            ->default('-')
+                            ->columnSpan(1),
+
+                        TextEntry::make('philhealthnum')->label('Philhealth Number')
+                            ->default('-')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(1),
+
                     ])->columns(4)->columnSpan(9),
 
                 Fieldset::make('')->schema([
                     ImageEntry::make('image')
                         ->hiddenLabel()
                         ->columnSpanFull()
-                        ->height('200px')
+                        ->circular()
+                        ->height('240px')
                         ->defaultImageUrl(asset('images/default-image.png')),
 
-
-                    IconEntry::make('isMember')->label('Member')
-                        ->icon(fn (string $state): string => match ($state) {
-                            '1' => 'heroicon-o-check-badge',
-                            '0' => 'heroicon-o-x-circle',
-
-                        })
-                        ->color(fn (string $state): string => match ($state) {
-                            '1' => 'success',
-                            '0' => 'danger',
-
-                        })
-                        ->size(IconEntrySize::ExtraLarge)
-                        ->default('-')
-                        ->columnSpanFull(),
-
-                    TextEntry::make('philhealthnum')->label('Philhealth Number')
+                    TextEntry::make('created_at')->label('Created')
+                        ->dateTime('M d, Y - h:iA')
                         ->default('-')
                         ->weight(FontWeight::Light)
-                        ->color('info')
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->color('info'),
+
+
+                    TextEntry::make('updated_at')->label('Updated last')
+                        ->dateTime('M d, Y - h:iA')
+                        ->default('-')
+                        ->weight(FontWeight::Light)
+                        ->columnSpanFull()
+                        ->color('info'),
+
 
 
 
@@ -348,6 +365,7 @@ class IndividualResource extends Resource
             RelationManagers\PastMedicalhistoriesRelationManager::class,
             RelationManagers\FamilyHistoriesRelationManager::class,
             RelationManagers\TravelHistoriesRelationManager::class,
+            RelationManagers\ObHistoriesRelationManager::class,
         ];
     }
 

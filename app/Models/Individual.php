@@ -59,6 +59,13 @@ class Individual extends Model
 
 
 
+    public function obstetrics_histories(): HasMany
+    {
+        return $this->hasMany(ObHistory::class);
+    }
+
+
+
 
 
     protected static function booted(): void
