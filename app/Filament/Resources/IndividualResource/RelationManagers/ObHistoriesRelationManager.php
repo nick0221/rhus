@@ -81,7 +81,12 @@ class ObHistoriesRelationManager extends RelationManager
                     ->label('Create new OB history'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Edit OB History')
+                    ->modalWidth('md')
+                    ->modalSubmitActionLabel('Save changes')
+                    ->modalFooterActionsAlignment(Alignment::End),
+
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
