@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('aog')->nullable();
             $table->date('edc')->nullable();
             $table->foreignId('individual_id')->references('id')->on('individuals')->cascadeOnDelete();
-
             $table->timestamps();
         });
     }

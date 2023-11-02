@@ -14,6 +14,7 @@ class TravelHistory extends Model
         'place',
         'daysofstay',
         'individual_id',
+        'treatments_id'
     ];
 
 

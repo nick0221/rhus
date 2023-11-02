@@ -9,6 +9,12 @@ class FamilyHistory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['description', 'historyDate', 'individual_id' ];
+    protected $fillable = ['description', 'historyDate', 'individual_id', 'treatments_id' ];
+
+
+
+
+
+
 
 }

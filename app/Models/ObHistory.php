@@ -14,6 +14,7 @@ class ObHistory extends Model
         'aog',
         'edc',
         'individual_id',
+        'treatments_id'
     ];
 
 
