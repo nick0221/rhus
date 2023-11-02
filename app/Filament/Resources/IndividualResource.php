@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\IconEntry\IconEntrySize;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -164,20 +165,25 @@ class IndividualResource extends Resource
                     ->alignStart()
                     ->boolean(),
 
-                Tables\Columns\TextColumn::make('fullname')
+                Tables\Columns\TextColumn::make('fullname')->label('Name')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('civilstatus')
+                Tables\Columns\TextColumn::make('civilstatus')->label('Civil Status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birthdate')
                     ->date(),
                 Tables\Columns\TextColumn::make('gender')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('height')
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('weight')
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('philhealthnum')
+                    ->default('-')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -213,66 +219,76 @@ class IndividualResource extends Resource
                 Section::make('Personal Information')
                     ->schema([
                         TextEntry::make('firstname')->label('Firstname')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('lastname')->label('Lastname')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('middlename')->label('Middlename')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->default('-')
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('extname')->label('Ext. Name')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->default('-')
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('gender')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->default('-')
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('civilstatus')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->default('-')
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('birthdate')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->default('-')
                             ->color('info')
                             ->date('M d, Y')
                             ->columnSpan(1),
 
                         TextEntry::make('birthdate')->label('Age')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->formatStateUsing(fn($state): string => Carbon::parse($state)->age)
                             ->default('-')
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('address')->label('Address')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->color('info')
                             ->columnSpan(3),
 
 
                         TextEntry::make('category.title')->label('Category')
-                            ->weight(FontWeight::Bold)
+                            ->weight(FontWeight::Light)
                             ->color('info')
                             ->default('-')
                             ->columnSpan(1),
 
+                        TextEntry::make('height')->label('Height (cm.)')
+                            ->default('-')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(1),
 
+                        TextEntry::make('weight')->label('Weight (kg.)')
+                            ->default('-')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(1),
 
                     ])->columns(4)->columnSpan(9),
 
@@ -295,26 +311,17 @@ class IndividualResource extends Resource
                             '0' => 'danger',
 
                         })
+                        ->size(IconEntrySize::ExtraLarge)
                         ->default('-')
                         ->columnSpanFull(),
 
                     TextEntry::make('philhealthnum')->label('Philhealth Number')
                         ->default('-')
-                        ->weight(FontWeight::Bold)
+                        ->weight(FontWeight::Light)
                         ->color('info')
                         ->columnSpanFull(),
 
-                    TextEntry::make('height')->label('Height (cm.)')
-                        ->default('-')
-                        ->weight(FontWeight::Bold)
-                        ->color('info')
-                        ->columnSpanFull(),
 
-                    TextEntry::make('weight')->label('Weight (kg.)')
-                        ->default('-')
-                        ->weight(FontWeight::Bold)
-                        ->color('info')
-                        ->columnSpanFull(),
 
 
                 ])->columnSpan(3)
@@ -327,7 +334,7 @@ class IndividualResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PastMedicalhistoriesRelationManager::class,
         ];
     }
 
