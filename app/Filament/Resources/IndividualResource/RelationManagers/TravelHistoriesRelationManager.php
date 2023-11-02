@@ -55,7 +55,9 @@ class TravelHistoriesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('dateoftravel')
             ->columns([
-                Tables\Columns\TextColumn::make('dateoftravel'),
+                Tables\Columns\TextColumn::make('dateoftravel')->label('Traveled Date')->date('M d, Y'),
+                Tables\Columns\TextColumn::make('place'),
+                Tables\Columns\TextColumn::make('daysofstay')->label('Days of Stay'),
             ])
             ->filters([
                 //
@@ -67,10 +69,18 @@ class TravelHistoriesRelationManager extends RelationManager
                     ->modalSubmitActionLabel('Save')
                     ->modalFooterActionsAlignment(Alignment::End)
                     ->createAnother(false)
+                    ->closeModalByClickingAway(false)
+                    ->successNotificationTitle('Travel history has been successfully added.')
                     ->label('Create new travel history'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Edit Travel History')
+                    ->modalWidth('md')
+                    ->closeModalByClickingAway(false)
+                    ->modalSubmitActionLabel('Save changes')
+                    ->modalFooterActionsAlignment(Alignment::End),
+
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

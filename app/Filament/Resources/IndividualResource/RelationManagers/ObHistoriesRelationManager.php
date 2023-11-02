@@ -76,6 +76,7 @@ class ObHistoriesRelationManager extends RelationManager
                     ->icon('heroicon-o-plus')
                     ->modalWidth('md')
                     ->modalSubmitActionLabel('Save')
+                    ->closeModalByClickingAway(false)
                     ->modalFooterActionsAlignment(Alignment::End)
                     ->createAnother(false)
                     ->label('Create new OB history'),
@@ -84,6 +85,7 @@ class ObHistoriesRelationManager extends RelationManager
                 Tables\Actions\EditAction::make()
                     ->modalHeading('Edit OB History')
                     ->modalWidth('md')
+                    ->closeModalByClickingAway(false)
                     ->modalSubmitActionLabel('Save changes')
                     ->modalFooterActionsAlignment(Alignment::End),
 
