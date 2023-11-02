@@ -11,16 +11,14 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PastMedicalhistoriesRelationManager extends RelationManager
+class FamilyHistoriesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'past_medical_histories';
-
+    protected static string $relationship = 'family_histories';
 
     public function isReadOnly(): bool
     {
         return false;
     }
-
 
 
     public function form(Form $form): Form
@@ -49,19 +47,12 @@ class PastMedicalhistoriesRelationManager extends RelationManager
                         'Others' => 'Others'
 
                     ])
-
-//                Forms\Components\Textarea::make('description')
-//                    ->rows(5)
-//                    ->columnSpanFull()
-//                    ->required(),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-
-            ->heading('Past Medical Histories')
             ->recordTitleAttribute('description')
             ->columns([
                 Tables\Columns\TextColumn::make('historyDate')
@@ -78,17 +69,16 @@ class PastMedicalhistoriesRelationManager extends RelationManager
                     ->modalSubmitActionLabel('Save')
                     ->modalFooterActionsAlignment(Alignment::End)
                     ->createAnother(false)
-                    ->label('Create new medical history'),
+                    ->label('Create new family history'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-//                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-//                ]),
-            ])
-            ->emptyStateHeading('No past medical history found.');
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

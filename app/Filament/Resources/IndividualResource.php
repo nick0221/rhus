@@ -36,7 +36,7 @@ class IndividualResource extends Resource
 
     protected static ?string $navigationLabel = 'Individuals';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -339,10 +339,14 @@ class IndividualResource extends Resource
 
     public static function getRelations(): array
     {
+
         return [
             RelationManagers\PastMedicalhistoriesRelationManager::class,
+            RelationManagers\FamilyHistoriesRelationManager::class,
         ];
     }
+
+
 
     public static function getPages(): array
     {

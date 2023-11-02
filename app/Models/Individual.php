@@ -40,9 +40,15 @@ class Individual extends Model
 
 
 
-    public function past_medicalhistories(): HasMany
+    public function past_medical_histories(): HasMany
     {
         return $this->hasMany(PastMedicalhistory::class);
+    }
+
+
+    public function family_histories(): HasMany
+    {
+        return $this->hasMany(FamilyHistory::class);
     }
 
 
