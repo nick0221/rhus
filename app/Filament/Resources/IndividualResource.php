@@ -36,7 +36,7 @@ class IndividualResource extends Resource
 
     protected static ?string $navigationLabel = 'Individuals';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
     {
@@ -161,9 +161,14 @@ class IndividualResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\IconColumn::make('isMember')
-                    ->alignStart()
+                Tables\Columns\IconColumn::make('isMember')->label('Member')
+                    ->alignCenter()
                     ->boolean(),
+
+                Tables\Columns\ImageColumn::make('image')->label('Img')
+                    ->alignCenter()
+                    ->circular()
+                    ->defaultImageUrl(asset('images/default-image.png')),
 
                 Tables\Columns\TextColumn::make('fullname')->label('Name')
                     ->searchable(),
@@ -171,6 +176,7 @@ class IndividualResource extends Resource
                 Tables\Columns\TextColumn::make('civilstatus')->label('Civil Status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birthdate')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->date(),
                 Tables\Columns\TextColumn::make('gender')
                     ->searchable(),
@@ -203,9 +209,9 @@ class IndividualResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ])
             ->deferLoading();
     }
