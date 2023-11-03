@@ -27,7 +27,10 @@ class Individual extends Model
         'philhealthnum',
         'isMember',
         'image',
-        'category_id',
+        //'category_id',
+        'mobile',
+        'educAttainment',
+        'mothersName',
 
     ];
 
@@ -71,7 +74,7 @@ class Individual extends Model
     protected static function booted(): void
     {
         static::created(function ($ind) {
-            $ind->fullname = Str::ucfirst($ind->firstname .' '.$ind->middlename.' '.$ind->lastname.' '.$ind->extname);
+            $ind->fullname = (ucfirst($ind->firstname) .' '.ucfirst($ind->middlename).' '.ucfirst($ind->lastname).' '.ucfirst($ind->extname));
             $ind->save();
         });
 

@@ -50,6 +50,7 @@ class IndividualResource extends Resource
                     ->description('Fill out all the required(*) fields.')
                     ->schema([
                     Forms\Components\TextInput::make('firstname')
+                        ->autocapitalize('words')
                         ->columnSpan(2)
                         ->autocomplete(false)
                         ->required()
@@ -57,6 +58,7 @@ class IndividualResource extends Resource
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('lastname')
+                        ->autocapitalize('words')
                         ->columnSpan(2)
                         ->autocomplete(false)
                         ->required()
@@ -64,6 +66,7 @@ class IndividualResource extends Resource
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('middlename')
+                        ->autocapitalize('words')
                         ->columnSpan(2)
                         ->autocomplete(false)
                         ->placeholder('Enter the middlename')
@@ -102,24 +105,36 @@ class IndividualResource extends Resource
                         ->rows(4)
                         ->columnSpan(5),
 
-                   Forms\Components\Select::make('category_id')
-                        ->placeholder('-')
-                        ->columnSpan(2)
-                        ->createOptionForm([
-                           Forms\Components\TextInput::make('title')
-                               ->required(),
-                        ])
-                       ->createOptionAction(
-                           fn (\Filament\Forms\Components\Actions\Action $action) => $action
-                               ->modalWidth('sm')
-                               ->modalFooterActionsAlignment('end')
-                               ->tooltip('Register new category')
-                               ->modalSubmitActionLabel('Save')
-                       )
-                        ->createOptionModalHeading('Add new category')
-                        ->relationship('category', 'title')
-                        ->preload()
-                        ->searchable(),
+//                   Forms\Components\Select::make('category_id')
+//                        ->placeholder('-')
+//                        ->columnSpan(2)
+//                        ->createOptionForm([
+//                           Forms\Components\TextInput::make('title')
+//                               ->required(),
+//                        ])
+//                       ->createOptionAction(
+//                           fn (\Filament\Forms\Components\Actions\Action $action) => $action
+//                               ->modalWidth('sm')
+//                               ->modalFooterActionsAlignment('end')
+//                               ->tooltip('Register new category')
+//                               ->modalSubmitActionLabel('Save')
+//                       )
+//                        ->createOptionModalHeading('Add new category')
+//                        ->relationship('category', 'title')
+//                        ->preload()
+//                        ->searchable(),
+
+
+                   Forms\Components\TextInput::make('mobile')
+                       ->columnSpan(2)
+                       ->autocomplete(false)
+                       ->prefix('+639')
+                       ->placeholder('9** *** ****')
+                       ->mask('999 999 9999')
+                       ->maxLength(12),
+
+                   Forms\Components\TextInput::make('educAttainment')->label('Educational Attainment')
+                       ->columnSpan(3),
 
                 ])->columnSpan(9)->columns(7),
 
@@ -230,16 +245,19 @@ class IndividualResource extends Resource
                 Section::make('Personal Information')
                     ->schema([
                         TextEntry::make('firstname')->label('Firstname')
+                            ->formatStateUsing(fn ($state): string => ucfirst($state))
                             ->weight(FontWeight::Light)
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('lastname')->label('Lastname')
+                            ->formatStateUsing(fn ($state): string => ucfirst($state))
                             ->weight(FontWeight::Light)
                             ->color('info')
                             ->columnSpan(1),
 
                         TextEntry::make('middlename')->label('Middlename')
+                            ->formatStateUsing(fn ($state): string => ucfirst($state))
                             ->weight(FontWeight::Light)
                             ->default('-')
                             ->color('info')
