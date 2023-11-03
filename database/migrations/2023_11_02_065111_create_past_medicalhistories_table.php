@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('historyDate')->nullable();
             $table->longText('description')->nullable();
             $table->foreignIdFor(\App\Models\Individual::class, 'individual_id')->nullable();
-            //$table->foreignId('individual_id')->references('id')->on('individuals')->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

@@ -166,6 +166,7 @@ class TreatmentResource extends Resource
                             ->preload()
                             ->searchable()
                             ->columnStart(7),
+
                         Forms\Components\Repeater::make('pastMedicalhistory')
                             ->label('Past Medical History')
                             ->relationship()
@@ -190,13 +191,24 @@ class TreatmentResource extends Resource
 
                                     ]),
 
-                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2)
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2),
+
+                        Forms\Components\Repeater::make('family_histories')
+                            ->label('Past Medical History')
+                            ->relationship()
+                            ->schema([
+
+
+
+                            ])->columnSpanFull()->addable(false)->deletable(false)->columns(2)
 
 
 
 
 
-                ])->columns(12)->columnSpan(5),
+
+
+                    ])->columns(12)->columnSpan(5),
 
                 Forms\Components\Section::make('')->schema([
 

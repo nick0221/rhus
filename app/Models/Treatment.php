@@ -12,10 +12,6 @@ class Treatment extends Model
     use HasFactory;
     protected $fillable = [
         'individual_id',
-
-//        'ob_histories_id',
-//        'travel_histories_id',
-//        'family_histories_id',
         'category_id',
         'isDependent',
         'dependentPhilhealthNum',
