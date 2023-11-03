@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('treatments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Individual::class, 'individual_id');
-            $table->foreignId('past_medicalhistories_id')->references('id')->on('past_medicalhistories')->cascadeOnDelete();
-            $table->foreignId('ob_histories_id')->references('id')->on('ob_histories')->cascadeOnDelete();
-            $table->foreignId('travel_histories_id')->references('id')->on('travel_histories')->cascadeOnDelete();
-            $table->foreignId('family_histories_id')->references('id')->on('family_histories')->cascadeOnDelete();
+//            $table->foreignId('past_medicalhistories_id')->references('id')->on('past_medicalhistories')->cascadeOnDelete();
+//            $table->foreignId('ob_histories_id')->references('id')->on('ob_histories')->cascadeOnDelete();
+//            $table->foreignId('travel_histories_id')->references('id')->on('travel_histories')->cascadeOnDelete();
+//            $table->foreignId('family_histories_id')->references('id')->on('family_histories')->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
             $table->boolean('isDependent')->default(false);
             $table->string('dependentPhilhealthNum')->nullable();

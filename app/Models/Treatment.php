@@ -12,10 +12,10 @@ class Treatment extends Model
     use HasFactory;
     protected $fillable = [
         'individual_id',
-        'past_medicalhistories_id',
-        'ob_histories_id',
-        'travel_histories_id',
-        'family_histories_id',
+
+//        'ob_histories_id',
+//        'travel_histories_id',
+//        'family_histories_id',
         'category_id',
         'isDependent',
         'dependentPhilhealthNum',
@@ -31,7 +31,7 @@ class Treatment extends Model
     }
 
 
-    public function past_medicalhistories(): HasMany
+    public function pastMedicalhistory(): HasMany
     {
         return $this->hasMany(PastMedicalhistory::class, 'treatments_id');
     }

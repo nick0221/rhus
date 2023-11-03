@@ -166,7 +166,8 @@ class TreatmentResource extends Resource
                             ->preload()
                             ->searchable()
                             ->columnStart(7),
-                        Forms\Components\Repeater::make('past_medicalhistories')
+                        Forms\Components\Repeater::make('pastMedicalhistory')
+                            ->label('Past Medical History')
                             ->relationship()
                             ->schema([
 
@@ -178,7 +179,6 @@ class TreatmentResource extends Resource
                                     ->suffixIcon('heroicon-o-calendar'),
 
                                 Forms\Components\Select::make('description')
-
                                     ->options([
                                         'HPN' => 'HPN',
                                         'Heart Disease' => 'Heart Disease',
@@ -194,39 +194,7 @@ class TreatmentResource extends Resource
 
 
 
-//                        TableRepeater::make('past_medicalhistories')
-//                            ->relationship('past_medicalhistories')
-//                            ->schema([
-//                                Forms\Components\TextInput::make('individual_id') ,
-//
-//                                Forms\Components\DatePicker::make('historyDate')
-//                                    ->placeholder('M d, YYYY')
-//                                    ->maxDate(now())
-//                                    ->closeOnDateSelection()
-//                                    ->native(false)
-//                                    ->suffixIcon('heroicon-o-calendar'),
-//
-//                                Forms\Components\Select::make('description')
-//                                    ->required()
-//                                    ->columnSpanFull()
-//                                    ->options([
-//                                        'HPN' => 'HPN',
-//                                        'Heart Disease' => 'Heart Disease',
-//                                        'Kidney Disease' => 'Kidney Disease',
-//                                        'Stroke/CVD' => 'Stroke/CVD',
-//                                        'Seisure Disorder' => 'Seisure Disorder',
-//                                        'Hypercholesterolemia/Dyslipidemia' => 'Hypercholesterolemia/Dyslipidemia',
-//                                        'Others' => 'Others'
-//
-//                                    ]),
-//
-//                            ])
-//                            ->minItems(1)
-//                            ->maxItems(1)
-//                            ->deletable(false)
-//                            ->colStyles([
-//                                'historyDate' => 'color: ; width: 250px;',
-//                            ]),
+
 
                 ])->columns(12)->columnSpan(5),
 
@@ -270,20 +238,8 @@ class TreatmentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('past_medicalhistories.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('ob_histories.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('travel_histories.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('family_histories.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('individual.id')
-                    ->numeric()
+
+                Tables\Columns\TextColumn::make('individual.fullname')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
