@@ -30,7 +30,10 @@ class Individual extends Model
         //'category_id',
         'mobile',
         'educAttainment',
-        'mothersName',
+        'guardianName',
+        'placeofbirth',
+        'occupation',
+        'guardianContact',
 
     ];
 

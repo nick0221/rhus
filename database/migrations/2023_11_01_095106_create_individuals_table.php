@@ -26,10 +26,13 @@ return new class extends Migration
             $table->string('weight')->nullable();
             $table->string('mobile')->nullable();
             $table->string('educAttainment')->nullable();
-            $table->string('mothersName')->nullable();
             $table->string('philhealthnum')->nullable();
             $table->boolean('isMember')->default(false);
             $table->longText('image')->nullable();
+            $table->longText('placeofbirth')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('guardianName')->nullable();
+            $table->string('guardianContact')->nullable();
             //$table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
             $table->timestamps();
         });

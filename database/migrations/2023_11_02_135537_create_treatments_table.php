@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('ob_histories_id')->references('id')->on('ob_histories')->cascadeOnDelete();
             $table->foreignId('travel_histories_id')->references('id')->on('travel_histories')->cascadeOnDelete();
             $table->foreignId('family_histories_id')->references('id')->on('family_histories')->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
+
 
             $table->timestamps();
         });

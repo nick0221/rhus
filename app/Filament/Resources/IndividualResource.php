@@ -49,7 +49,7 @@ class IndividualResource extends Resource
                 Forms\Components\Section::make('Personal Information')
                     ->description('Fill out all the required(*) fields.')
                     ->schema([
-                    Forms\Components\TextInput::make('firstname')
+                        Forms\Components\TextInput::make('firstname')
                         ->autocapitalize('words')
                         ->columnSpan(2)
                         ->autocomplete(false)
@@ -57,7 +57,7 @@ class IndividualResource extends Resource
                         ->placeholder('Enter the firstname')
                         ->maxLength(255),
 
-                    Forms\Components\TextInput::make('lastname')
+                        Forms\Components\TextInput::make('lastname')
                         ->autocapitalize('words')
                         ->columnSpan(2)
                         ->autocomplete(false)
@@ -65,45 +65,67 @@ class IndividualResource extends Resource
                         ->placeholder('Enter the lastname')
                         ->maxLength(255),
 
-                    Forms\Components\TextInput::make('middlename')
+                        Forms\Components\TextInput::make('middlename')
                         ->autocapitalize('words')
                         ->columnSpan(2)
                         ->autocomplete(false)
                         ->placeholder('Enter the middlename')
                         ->maxLength(255),
 
-                    Forms\Components\TextInput::make('extname')
+                        Forms\Components\TextInput::make('extname')
                         ->columnSpan(1)
                         ->autocomplete(false)
                         ->placeholder('e.g(Jr.) ')
                         ->maxLength(255),
 
-                    Forms\Components\Select::make('gender')
+                        Forms\Components\Select::make('gender')
                         ->options(GenderEnum::getValues())
                         ->placeholder('------')
                         ->columnSpan(2)
                         ->required(),
 
-                    Forms\Components\Select::make('civilstatus')
+                        Forms\Components\Select::make('civilstatus')
                         ->columnSpan(2)
                         ->required()
                         ->placeholder('------')
                         ->options(CivilStatusesEnum::getValues()),
 
-                    Forms\Components\DatePicker::make('birthdate')
+                        Forms\Components\Toggle::make('isMember')
+                            ->inline(false)
+                            ->onIcon('heroicon-m-check')
+                            ->live(onBlur: true)
+                            ->columnSpan(1)
+                            ->required(),
+
+                        Forms\Components\TextInput::make('philhealthnum')->label('Philhealth Number')
+                            ->columnSpan(2)
+                            ->numeric()
+                            ->required(fn (Get $get): bool => $get('isMember'))
+                            ->maxLength(255),
+
+                        Forms\Components\DatePicker::make('birthdate')
                         ->placeholder('M d, YYYY')
                         ->maxDate(now())
                         ->closeOnDateSelection()
                         ->native(false)
                         ->required()
                         ->suffixIcon('heroicon-o-calendar')
-                        ->columnStart(6)
                         ->columnSpan(2),
 
 
-                   Forms\Components\Textarea::make('address')
-                        ->rows(4)
-                        ->columnSpan(5),
+                        Forms\Components\Textarea::make('placeofbirth')
+                            ->rows(2)
+                            ->autosize()
+                            ->columnSpan(3),
+
+                        Forms\Components\Textarea::make('address')->label('Residing Address')
+                            ->rows(2)
+                            ->autosize()
+                            ->columnSpan(4),
+
+                        Forms\Components\TextInput::make('occupation')
+                            ->columnSpan(3),
+
 
 //                   Forms\Components\Select::make('category_id')
 //                        ->placeholder('-')
@@ -125,18 +147,26 @@ class IndividualResource extends Resource
 //                        ->searchable(),
 
 
-                   Forms\Components\TextInput::make('mobile')
-                       ->columnSpan(2)
-                       ->autocomplete(false)
-                       ->prefix('+639')
-                       ->placeholder('9** *** ****')
-                       ->mask('999 999 9999')
-                       ->maxLength(12),
 
-                   Forms\Components\TextInput::make('educAttainment')->label('Educational Attainment')
-                       ->columnSpan(3),
+                       Forms\Components\Fieldset::make('Guardian Information')->schema([
+                            Forms\Components\TextInput::make('guardianName'),
 
-                ])->columnSpan(9)->columns(7),
+                           Forms\Components\TextInput::make('guardianContact'),
+
+                       ])->columnSpan(7)->columns(2),
+
+                       Forms\Components\Fieldset::make('Educational Attainment')->schema([
+                            Forms\Components\TextInput::make('educAttainment')->hiddenLabel()
+                               ->columnSpan(3),
+                       ])->columnSpan(4),
+
+
+
+
+
+
+
+                    ])->columnSpan(9)->columns(7),
 
 
 
@@ -159,19 +189,23 @@ class IndividualResource extends Resource
                         ->suffix('kg.')
                         ->maxLength(255),
 
-                    Forms\Components\Toggle::make('isMember')
-                        ->inline(false)
-                        ->onIcon('heroicon-m-check')
-                        ->live(onBlur: true)
-                        ->required(),
 
-                    Forms\Components\TextInput::make('philhealthnum')->label('Philhealth Number')
-                        ->numeric()
-                        ->required(fn (Get $get): bool => $get('isMember'))
-                        ->maxLength(255),
+                    Forms\Components\TextInput::make('mobile')
+                        ->autocomplete(false)
+                        ->prefix('+639')
+                        ->placeholder('9** *** ****')
+                        ->mask('999 999 9999')
+                        ->maxLength(12),
 
 
                 ])->columnSpan(3),
+
+
+
+//                Forms\Components\Section::make('Other Information')
+//                ->schema([
+//
+//                ])->columnSpan(4)->columns(7)->collapsible()
 
 
             ])->columns(12);
@@ -242,7 +276,8 @@ class IndividualResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Personal Information')
+                Section::make('')
+
                     ->schema([
                         TextEntry::make('firstname')->label('Firstname')
                             ->formatStateUsing(fn ($state): string => ucfirst($state))
@@ -295,18 +330,33 @@ class IndividualResource extends Resource
                             ->color('info')
                             ->columnSpan(1),
 
-                        TextEntry::make('address')->label('Address')
+                        TextEntry::make('placeofbirth')->label('Place of birth')
                             ->weight(FontWeight::Light)
                             ->color('info')
                             ->default('-')
-                            ->columnSpan(3),
+                            ->columnSpan(2),
 
 
-                        TextEntry::make('category.title')->label('Category')
+                        TextEntry::make('mobile')
                             ->weight(FontWeight::Light)
                             ->color('info')
                             ->default('-')
                             ->columnSpan(1),
+
+                        TextEntry::make('occupation')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->default('-')
+                            ->columnSpan(1),
+
+
+                        TextEntry::make('address')->label('Residing Address')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->default('-')
+                            ->columnSpanFull(3),
+
+
 
                         TextEntry::make('height')->label('Height (cm.)')
                             ->default('-')
@@ -341,6 +391,31 @@ class IndividualResource extends Resource
                             ->weight(FontWeight::Light)
                             ->color('info')
                             ->columnSpan(1),
+
+
+                        Fieldset::make('Guardian\'s Information')->schema([
+                            TextEntry::make('guardianName')->label('Guardian name')
+                                ->weight(FontWeight::Light)
+                                ->color('info')
+                                ->default('-'),
+
+                            TextEntry::make('guardianContact')->label('Contact')
+                                ->weight(FontWeight::Light)
+                                ->color('info')
+                                ->default('-'),
+                        ])->columns(2)->columnSpanFull(),
+
+                         Fieldset::make('Educational Attainment')->schema([
+                             TextEntry::make('educAttainment')->hiddenLabel()
+                                 ->weight(FontWeight::Light)
+                                 ->color('info')
+                                 ->default('-'),
+
+
+                         ])->columns(2)->columnSpanFull()
+
+
+
 
                     ])->columns(4)->columnSpan(9),
 
