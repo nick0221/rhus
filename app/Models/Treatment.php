@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Treatment extends Model
 {
@@ -15,6 +16,11 @@ class Treatment extends Model
         'ob_histories_id',
         'travel_histories_id',
         'family_histories_id',
+        'category_id',
+        'isDependent',
+        'dependentPhilhealthNum',
+        'birthday',
+        'phMemberName',
     ];
 
 
@@ -25,9 +31,9 @@ class Treatment extends Model
     }
 
 
-    public function past_medicalhistories(): BelongsTo
+    public function past_medicalhistories(): HasMany
     {
-        return $this->belongsTo(PastMedicalhistory::class);
+        return $this->hasMany(PastMedicalhistory::class, 'treatments_id');
     }
 
 
@@ -49,6 +55,10 @@ class Treatment extends Model
     }
 
 
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
 
 

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('past_medicalhistories', function (Blueprint $table) {
             $table->id();
-            $table->date('historyDate');
-            $table->longText('description');
-            $table->foreignId('individual_id')->references('id')->on('individuals')->cascadeOnDelete();
+            $table->date('historyDate')->nullable();
+            $table->longText('description')->nullable();
+            $table->foreignIdFor(\App\Models\Individual::class, 'individual_id')->nullable();
+            //$table->foreignId('individual_id')->references('id')->on('individuals')->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -126,28 +126,6 @@ class IndividualResource extends Resource
                         Forms\Components\TextInput::make('occupation')
                             ->columnSpan(3),
 
-
-//                   Forms\Components\Select::make('category_id')
-//                        ->placeholder('-')
-//                        ->columnSpan(2)
-//                        ->createOptionForm([
-//                           Forms\Components\TextInput::make('title')
-//                               ->required(),
-//                        ])
-//                       ->createOptionAction(
-//                           fn (\Filament\Forms\Components\Actions\Action $action) => $action
-//                               ->modalWidth('sm')
-//                               ->modalFooterActionsAlignment('end')
-//                               ->tooltip('Register new category')
-//                               ->modalSubmitActionLabel('Save')
-//                       )
-//                        ->createOptionModalHeading('Add new category')
-//                        ->relationship('category', 'title')
-//                        ->preload()
-//                        ->searchable(),
-
-
-
                        Forms\Components\Fieldset::make('Guardian Information')->schema([
                             Forms\Components\TextInput::make('guardianName'),
 
@@ -181,13 +159,11 @@ class IndividualResource extends Resource
                     Forms\Components\TextInput::make('height')
                         ->numeric()
                         ->inputMode('decimal')
-                        ->suffix('cm.')
-                        ->maxLength(255),
+                        ->suffix('cm.'),
                     Forms\Components\TextInput::make('weight')
                         ->numeric()
                         ->inputMode('decimal')
-                        ->suffix('kg.')
-                        ->maxLength(255),
+                        ->suffix('kg.'),
 
 
                     Forms\Components\TextInput::make('mobile')
@@ -202,10 +178,6 @@ class IndividualResource extends Resource
 
 
 
-//                Forms\Components\Section::make('Other Information')
-//                ->schema([
-//
-//                ])->columnSpan(4)->columns(7)->collapsible()
 
 
             ])->columns(12);

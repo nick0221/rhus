@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreignId('travel_histories_id')->references('id')->on('travel_histories')->cascadeOnDelete();
             $table->foreignId('family_histories_id')->references('id')->on('family_histories')->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
+            $table->boolean('isDependent')->default(false);
+            $table->string('dependentPhilhealthNum')->nullable();
+            $table->date('birthday')->nullable();
+            $table->string('phMemberName')->nullable();
 
 
             $table->timestamps();

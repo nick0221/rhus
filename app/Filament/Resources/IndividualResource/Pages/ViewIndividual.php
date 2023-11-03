@@ -26,7 +26,7 @@ class ViewIndividual extends ViewRecord
     {
         $isMember = ($this->getRecord()->isMember == true) ? 'Yes' : 'No';
         $phNumber = (empty($this->getRecord()->philhealthnum)) ? ' ' : $this->getRecord()->philhealthnum ;
-        return new HtmlString('<small class="m-0 p-0 text-blue-900">Philhealth Member: '.$isMember.'</small> &bull; <small class="m-0 p-0">PhilHealth Number: '.$phNumber.'</small>');
+        return new HtmlString('<small class="m-0 p-0 text-blue-900">Ph. Member: '.$isMember.'</small> &bull; <small class="m-0 p-0">Ph. Number: '.$phNumber.'</small>');
     }
 
     protected function getHeaderActions(): array
