@@ -16,6 +16,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -437,9 +438,9 @@ class TreatmentResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ]);
     }
 
@@ -499,14 +500,14 @@ class TreatmentResource extends Resource
                                 TextEntry::make('historyDate')
                                     ->date('M d, Y')
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
                                 TextEntry::make('description')
 
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
@@ -518,13 +519,13 @@ class TreatmentResource extends Resource
                                 TextEntry::make('historyDate')
                                     ->date('M d, Y')
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
                                 TextEntry::make('description')
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
@@ -580,42 +581,66 @@ class TreatmentResource extends Resource
                         ])->columns(3),
 
 
-                        Fieldset::make('Vital Signs')
-                            ->schema([
-                                TextEntry::make('bloodPressure')->label('BP: ')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} mmHg")
-                                    ->inlineLabel()
-                                    ->weight(FontWeight::Light)
-                                    ->color('info'),
+                        Fieldset::make('Vital Signs')->schema([
+                            RepeatableEntry::make('vitalSign')->hiddenLabel()
+                                ->schema([
+                                    TextEntry::make('bloodPressure')->label('BP: ')
+                                        ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} mmHg")
+                                        ->inlineLabel()
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
 
-                                TextEntry::make('rr')->label('RR: ')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} cpm")
-                                    ->inlineLabel()
-                                    ->weight(FontWeight::Light)
-                                    ->color('info'),
+                                    TextEntry::make('rr')->label('RR: ')
+                                        ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} cpm")
+                                        ->inlineLabel()
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
 
-                                TextEntry::make('temp')->label('Temp: ')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} C")
-                                    ->inlineLabel()
-                                    ->weight(FontWeight::Light)
-                                    ->color('info'),
+                                    TextEntry::make('temp')->label('Temp: ')
+                                        ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} C")
+                                        ->inlineLabel()
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
 
-                                TextEntry::make('hr')->label('HR: ')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} bpm")
-                                    ->inlineLabel()
-                                    ->weight(FontWeight::Light)
-                                    ->color('info'),
+                                    TextEntry::make('hr')->label('HR: ')
+                                        ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} bpm")
+                                        ->inlineLabel()
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
 
-                                TextEntry::make('pr')->label('PR: ')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} bpm")
-                                    ->inlineLabel()
-                                    ->weight(FontWeight::Light)
-                                    ->color('info'),
+                                    TextEntry::make('pr')->label('PR: ')
+                                        ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} bpm")
+                                        ->inlineLabel()
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
+
+                                ])->columns(1)->columnSpanFull()->contained(false),
+                        ]),
+
+                        Fieldset::make('Diagnosis')->schema([
+                            TextEntry::make('diagnosis')->hiddenLabel()
+                                ->weight(FontWeight::Light)
+                                ->color('info'),
+                        ])->columnSpan(6),
+
+                        Fieldset::make('Medication')->schema([
+                            TextEntry::make('medication')->hiddenLabel()
+                                ->weight(FontWeight::Light)
+                                ->color('info'),
+                        ])->columnSpan(6),
+
+
+                        Fieldset::make('Chief Complaints')->schema([
+                            TextEntry::make('chiefComplaints')->hiddenLabel()
+                                ->weight(FontWeight::Light)
+                                ->color('info'),
+                        ])->columnSpan(12),
 
 
 
 
-                            ])->columns(1),
+
+
                     ])->columns(12)->columnSpan(5),
 
 
@@ -655,7 +680,10 @@ class TreatmentResource extends Resource
 
 
 
-                ])->columns(1)->columnSpan(2)
+                ])->columns(1)->columnSpan(2),
+
+
+
 
 
 

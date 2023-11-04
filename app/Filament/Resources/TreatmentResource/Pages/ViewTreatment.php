@@ -15,6 +15,17 @@ class ViewTreatment extends ViewRecord
     protected static string $resource = TreatmentResource::class;
 
 
+    protected function getHeaderActions(): array
+    {
+        $recordsName = $this->getRecord()->individual->fullname;
+
+        return [
+            Actions\DeleteAction::make()
+                ->modalHeading('Delete '. $recordsName. ' record')
+                ->successNotificationTitle('Treatment record of '.$recordsName.' has been successfully deleted.'),
+        ];
+    }
+
 
     public function getHeading(): \Illuminate\Contracts\Support\Htmlable|string
     {
