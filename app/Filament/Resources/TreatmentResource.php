@@ -9,10 +9,13 @@ use App\Filament\Resources\TreatmentResource\RelationManagers;
 use App\Models\Individual;
 use App\Models\Treatment;
 use Carbon\Carbon;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -174,8 +177,8 @@ class TreatmentResource extends Resource
                             ->searchable()
                             ->columnStart(7),
 
-                        Forms\Components\Repeater::make('pastMedicalhistory')
-                            ->label('Past Medical History')
+                        Forms\Components\Repeater::make('pastMedicalhistory')->hiddenLabel()
+                            ->itemLabel('1. Past Medical History')
                             ->relationship()
                             ->schema([
 
@@ -198,10 +201,10 @@ class TreatmentResource extends Resource
 
                                     ]),
 
-                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2),
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2)->collapsible()->collapsed(),
 
-                        Forms\Components\Repeater::make('family_histories')
-                            ->label('Family History')
+                        Forms\Components\Repeater::make('family_histories')->hiddenLabel()
+                            ->itemLabel('2. Family History')
                             ->relationship()
                             ->schema([
                                 Forms\Components\DatePicker::make('historyDate')
@@ -223,10 +226,10 @@ class TreatmentResource extends Resource
 
                                     ]),
 
-                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2),
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2)->collapsible()->collapsed(),
 
-                        Forms\Components\Repeater::make('travel_histories')
-                            ->label('Travel History')
+                        Forms\Components\Repeater::make('travel_histories')->hiddenLabel()
+                            ->itemLabel('3. Travel History')
                             ->relationship()
                             ->schema([
 
@@ -246,10 +249,10 @@ class TreatmentResource extends Resource
                                     ->numeric()
                                     ->columnSpan(1),
 
-                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(5),
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(5)->collapsible()->collapsed(),
 
-                        Forms\Components\Repeater::make('ob_histories')
-                            ->label('OB History')
+                        Forms\Components\Repeater::make('ob_histories')->hiddenLabel()
+                            ->itemLabel('4. OB History')
                             ->relationship()
                             ->schema([
 
@@ -275,7 +278,7 @@ class TreatmentResource extends Resource
                                     ->maxDate(now()),
 
 
-                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(7)
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(7)->collapsible()->collapsed()
 
 
 
@@ -294,12 +297,15 @@ class TreatmentResource extends Resource
 
                     Forms\Components\TextInput::make('phMemberName')->label('PhilHealth Member Name')
                         ->columnSpan(2)
+                        ->alpha()
                         ->required(fn (Get $get): bool => $get('isDependent'))
+                        ->disabled(fn (Get $get): bool => $get('isDependent') == 0)
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('dependentPhilhealthNum')->label('Member\'s PhilHealth Number')
                         ->columnSpan(2)
                         ->numeric()
+                        ->disabled(fn (Get $get): bool => $get('isDependent') == 0)
                         ->required(fn (Get $get): bool => $get('isDependent'))
                         ->maxLength(255),
 
@@ -308,6 +314,7 @@ class TreatmentResource extends Resource
                         ->maxDate(now())
                         ->closeOnDateSelection()
                         ->native(false)
+                        ->disabled(fn (Get $get): bool => $get('isDependent') == 0)
                         ->required(fn (Get $get): bool => $get('isDependent'))
                         ->suffixIcon('heroicon-o-calendar')
                         ->columnSpan(2),
@@ -385,18 +392,172 @@ class TreatmentResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
+
             ->schema([
                 Section::make('')
                     ->schema([
                         TextEntry::make('individual.fullname')->label('Name')
-                            ->columnSpan(4)
+                            ->default('-')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(5),
+
+                        TextEntry::make('individual.philhealthnum')->label('PhilHealth Number')
+                            ->default('-')
+                            ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(5),
+
+                        IconEntry::make('individual.isMember')->label('Member')
+                            ->default('-')
+                            ->icon(fn (string $state): string => match ($state) {
+                                '1' => 'heroicon-o-check-badge',
+                                '0' => 'heroicon-o-x-circle',
+
+                            })
+                            ->color(fn (string $state): string => match ($state) {
+                                '1' => 'success',
+                                '0' => 'danger',
+
+                            })
+                            ->columnSpan(2),
+
+                        TextEntry::make('category.title')
+                            ->default('-')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(3),
+
+
+                        Fieldset::make('Past Medical History')
+                            ->relationship('pastMedicalhistory')
+                            ->schema([
+                                TextEntry::make('historyDate')
+                                    ->date('M d, Y')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('description')
+                                    ->date('M d, Y')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                        ]),
+
+                        Fieldset::make('Family History')
+                            ->relationship('family_histories')
+                            ->schema([
+                                TextEntry::make('historyDate')
+                                    ->date('M d, Y')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('description')
+                                    ->date('M d, Y')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                        ]),
+
+                        Fieldset::make('Travel History')
+                            ->relationship('travel_histories')
+                            ->schema([
+                                TextEntry::make('dateoftravel')->label('Travel Date')
+                                    ->date('M d, Y')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('place')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('daysofstay')->label('How long/days of stay')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                            ])->columns(3),
+
+                        Fieldset::make('OB History')
+                            ->relationship('ob_histories')
+                            ->schema([
+                                TextEntry::make('lmp')->label('(LMP) Last Menstrual Period')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('aog')->label('(AOG) Age of Gestation')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('edc')->label('(EDC) Expected date of confinement')
+                                    ->default('-')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
 
 
 
+                        ])->columns(3),
 
                     ])->columns(12)->columnSpan(5),
 
 
+
+                Section::make('')->schema([
+                    IconEntry::make('isDependent')->label('Dependent')
+                        ->default('-')
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check-badge',
+                            '0' => 'heroicon-o-x-circle',
+
+                        })
+                        ->color(fn (string $state): string => match ($state) {
+                            '1' => 'success',
+                            '0' => 'danger',
+
+                        })
+                        ->columnSpanFull(),
+
+                    TextEntry::make('phMemberName')->label('Member\'s Name')
+                        ->columnSpanFull()
+                        ->default('-')
+                        ->weight(FontWeight::Light)
+                        ->color('info'),
+
+                    TextEntry::make('dependentPhilhealthNum')->label('Member\'s PhilHealth Number')
+                        ->columnSpanFull()
+                        ->default('-')
+                        ->weight(FontWeight::Light)
+                        ->color('info'),
+
+                    TextEntry::make('birthday')->label('Birthdate')
+                        ->weight(FontWeight::Light)
+                        ->default('-')
+                        ->color('info')
+                        ->date('M d, Y')
+                        ->columnSpanFull(1),
+
+
+
+                ])->columns(1)->columnSpan(2)
 
 
 
