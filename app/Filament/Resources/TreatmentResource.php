@@ -89,6 +89,7 @@ class TreatmentResource extends Resource
                                         ->placeholder('M d, YYYY')
                                         ->maxDate(now())
                                         ->closeOnDateSelection()
+                                        ->date()
                                         ->native(false)
                                         ->required()
                                         ->suffixIcon('heroicon-o-calendar')
@@ -187,6 +188,7 @@ class TreatmentResource extends Resource
                             ->schema([
 
                                 Forms\Components\DatePicker::make('historyDate')
+                                    ->date()
                                     ->placeholder('M d, YYYY')
                                     ->maxDate(now())
                                     ->closeOnDateSelection()
@@ -212,6 +214,7 @@ class TreatmentResource extends Resource
                             ->relationship()
                             ->schema([
                                 Forms\Components\DatePicker::make('historyDate')
+                                    ->date()
                                     ->placeholder('M d, YYYY')
                                     ->maxDate(now())
                                     ->closeOnDateSelection()
@@ -284,7 +287,7 @@ class TreatmentResource extends Resource
 
                         ])->columnSpanFull()->addable(false)->deletable(false)->columns(7)->collapsible()->collapsed(),
 
-                        Forms\Components\Repeater::make('vitalSigns')->hiddenLabel()
+                        Forms\Components\Repeater::make('vitalSign')->hiddenLabel()
                             ->itemLabel('5. Vital Signs')
                             ->schema([
 
@@ -362,6 +365,7 @@ class TreatmentResource extends Resource
                         ->maxLength(255),
 
                     Forms\Components\DatePicker::make('birthday')
+                        ->date()
                         ->placeholder('M d, YYYY')
                         ->maxDate(now())
                         ->closeOnDateSelection()
@@ -371,15 +375,14 @@ class TreatmentResource extends Resource
                         ->suffixIcon('heroicon-o-calendar')
                         ->columnSpan(2),
 
-                    Forms\Components\TextInput::make('created_at')->visibleOn('edit')
-                        ->formatStateUsing(fn ($state): string => Carbon::parse($state)->timezone('Asia/Manila')->format('M d, Y  h:iA'))
+                    Forms\Components\DatePicker::make('created_at')->visibleOn('edit')
+                        ->formatStateUsing(fn ($state): string => Carbon::parse($state)->timezone('Asia/Manila')->format('M d, Y h:i A'))
                         ->disabled()
                         ->columnSpan(2),
 
 
-                      Forms\Components\TextInput::make('updated_at')->visibleOn('edit')
-                          ->label('Last updated at')
-                          ->formatStateUsing(fn ($state): string => Carbon::parse($state)->timezone('Asia/Manila')->format('M d, Y  h:iA'))
+                      Forms\Components\DatePicker::make('updated_at')->visibleOn('edit')
+                          ->formatStateUsing(fn ($state): string => Carbon::parse($state)->timezone('Asia/Manila')->format('M d, Y h:i A'))
                           ->disabled()
                           ->columnSpan(2),
 
@@ -397,7 +400,7 @@ class TreatmentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')->label('Date Created')
-                    ->date('M d, Y - h:iA')
+                    ->date('M d, Y h:iA')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('individual.fullname')->label('Name')
@@ -476,6 +479,13 @@ class TreatmentResource extends Resource
                             })
                             ->columnSpan(2),
 
+                        TextEntry::make('attendingProvider')
+                            ->default('-')
+                            ->weight(FontWeight::Light)
+                            ->color('info')
+                            ->columnSpan(7),
+
+
                         TextEntry::make('category.title')
                             ->default('-')
                             ->weight(FontWeight::Light)
@@ -489,14 +499,14 @@ class TreatmentResource extends Resource
                                 TextEntry::make('historyDate')
                                     ->date('M d, Y')
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
                                 TextEntry::make('description')
-                                    ->date('M d, Y')
+
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
@@ -508,14 +518,13 @@ class TreatmentResource extends Resource
                                 TextEntry::make('historyDate')
                                     ->date('M d, Y')
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
                                 TextEntry::make('description')
-                                    ->date('M d, Y')
                                     ->default('-')
-                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': $state)
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? ' ': $state)
                                     ->weight(FontWeight::Light)
                                     ->color('info'),
 
@@ -640,7 +649,6 @@ class TreatmentResource extends Resource
 
                     TextEntry::make('birthday')->label('Birthdate')
                         ->weight(FontWeight::Light)
-                        ->default('-')
                         ->color('info')
                         ->date('M d, Y')
                         ->columnSpanFull(1),

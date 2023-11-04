@@ -19,11 +19,6 @@ return new class extends Migration
             $table->string('dependentPhilhealthNum')->nullable();
             $table->date('birthday')->nullable();
             $table->string('phMemberName')->nullable();
-            $table->string('bloodPressure')->nullable();
-            $table->string('rr')->nullable();
-            $table->string('temp')->nullable();
-            $table->string('hr')->nullable();
-            $table->string('pr')->nullable();
             $table->json('vitalSign')->nullable();
             $table->longText('diagnosis')->nullable();
             $table->longText('medication')->nullable();
