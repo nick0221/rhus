@@ -33,21 +33,21 @@ class Treatment extends Model
     }
 
 
-    public function ob_histories(): BelongsTo
+    public function ob_histories(): HasMany
     {
-        return $this->belongsTo(ObHistory::class);
+        return $this->hasMany(ObHistory::class, 'treatments_id');
     }
 
 
-    public function travel_histories(): BelongsTo
+    public function travel_histories(): HasMany
     {
-        return $this->belongsTo(TravelHistory::class);
+        return $this->hasMany(TravelHistory::class, 'treatments_id');
     }
 
 
-    public function family_histories(): BelongsTo
+    public function family_histories(): HasMany
     {
-        return $this->belongsTo(FamilyHistory::class);
+        return $this->hasMany(FamilyHistory::class, 'treatments_id');
     }
 
 

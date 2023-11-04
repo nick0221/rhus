@@ -8,17 +8,22 @@ use App\Filament\Resources\TreatmentResource\Pages;
 use App\Filament\Resources\TreatmentResource\RelationManagers;
 use App\Models\Individual;
 use App\Models\Treatment;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
 
@@ -28,6 +33,8 @@ class TreatmentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $recordTitleAttribute = 'individual.fullname';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -35,7 +42,7 @@ class TreatmentResource extends Resource
                 Forms\Components\Section::make('')
                     ->description('Fill out all the required(*) fields')
                     ->schema([
-                        Forms\Components\Select::make('individual_id')
+                        Forms\Components\Select::make('individual_id')->label('Name')
                             ->relationship('individual', 'fullname', fn (Builder $query) => $query->orderByDesc('created_at'))
                             ->preload()
                             ->searchable(['firstname', 'lastname', 'middlename', 'fullname'])
@@ -194,13 +201,82 @@ class TreatmentResource extends Resource
                         ])->columnSpanFull()->addable(false)->deletable(false)->columns(2),
 
                         Forms\Components\Repeater::make('family_histories')
-                            ->label('Past Medical History')
+                            ->label('Family History')
+                            ->relationship()
+                            ->schema([
+                                Forms\Components\DatePicker::make('historyDate')
+                                    ->placeholder('M d, YYYY')
+                                    ->maxDate(now())
+                                    ->closeOnDateSelection()
+                                    ->native(false)
+                                    ->suffixIcon('heroicon-o-calendar'),
+
+                                Forms\Components\Select::make('description')
+                                    ->options([
+                                        'HPN' => 'HPN',
+                                        'Heart Disease' => 'Heart Disease',
+                                        'Kidney Disease' => 'Kidney Disease',
+                                        'Stroke/CVD' => 'Stroke/CVD',
+                                        'Seisure Disorder' => 'Seisure Disorder',
+                                        'Hypercholesterolemia/Dyslipidemia' => 'Hypercholesterolemia/Dyslipidemia',
+                                        'Others' => 'Others'
+
+                                    ]),
+
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(2),
+
+                        Forms\Components\Repeater::make('travel_histories')
+                            ->label('Travel History')
                             ->relationship()
                             ->schema([
 
+                                Forms\Components\DatePicker::make('dateoftravel')->label('Travel Date')
+                                    ->placeholder('M d, YYYY')
+                                    ->maxDate(now())
+                                    ->closeOnDateSelection()
+                                    ->native(false)
+                                    ->columnSpan(2)
+                                    ->suffixIcon('heroicon-o-calendar'),
 
 
-                            ])->columnSpanFull()->addable(false)->deletable(false)->columns(2)
+                                Forms\Components\TextInput::make('place')
+                                    ->columnSpan(2),
+
+                                Forms\Components\TextInput::make('daysofstay')->label('Days of stay')
+                                    ->numeric()
+                                    ->columnSpan(1),
+
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(5),
+
+                        Forms\Components\Repeater::make('ob_histories')
+                            ->label('OB History')
+                            ->relationship()
+                            ->schema([
+
+                                Forms\Components\DatePicker::make('lmp')->label('(LMP) Last Menstrual Period')
+                                    ->closeOnDateSelection()
+                                    ->date()
+                                    ->columnSpan(2)
+                                    ->placeholder('M d, YYYY')
+                                    ->suffixIcon('heroicon-o-calendar')
+                                    ->native(false),
+
+                                Forms\Components\TextInput::make('aog')->label('(AOG) Age of Gestation')
+                                    ->columnSpan(2)
+                                    ->maxLength(50),
+
+                                Forms\Components\DatePicker::make('edc')->label('(EDC) Expected date of confinement')
+                                    ->closeOnDateSelection()
+                                    ->date()
+                                    ->placeholder('M d, YYYY')
+                                    ->native(false)
+                                    ->suffixIcon('heroicon-o-calendar')
+                                    ->columnSpan(3)
+                                    ->maxDate(now()),
+
+
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(7)
+
 
 
 
@@ -211,13 +287,10 @@ class TreatmentResource extends Resource
                     ])->columns(12)->columnSpan(5),
 
                 Forms\Components\Section::make('')->schema([
-
                     Forms\Components\Toggle::make('isDependent')->label('Dependent')
                         ->inline(false)
                         ->onIcon('heroicon-m-check')
-                        ->live()
-                        ->hint(new HtmlString('<div style="font-size: x-small; font-style: italic; color: cornflowerblue">Mark this field if applicable</div>')),
-
+                        ->live(),
 
                     Forms\Components\TextInput::make('phMemberName')->label('PhilHealth Member Name')
                         ->columnSpan(2)
@@ -239,6 +312,19 @@ class TreatmentResource extends Resource
                         ->suffixIcon('heroicon-o-calendar')
                         ->columnSpan(2),
 
+                    Forms\Components\TextInput::make('created_at')->visibleOn('edit')
+                        ->formatStateUsing(fn ($state): string => Carbon::parse($state)->timezone('Asia/Manila')->format('M d, Y  h:iA'))
+                        ->disabled()
+                        ->columnSpan(2),
+
+
+                      Forms\Components\TextInput::make('updated_at')->visibleOn('edit')
+                          ->label('Last updated at')
+                          ->formatStateUsing(fn ($state): string => Carbon::parse($state)->timezone('Asia/Manila')->format('M d, Y  h:iA'))
+                          ->disabled()
+                          ->columnSpan(2),
+
+
                 ])->columns(1)->columnSpan(2),
 
 
@@ -250,13 +336,31 @@ class TreatmentResource extends Resource
     {
         return $table
             ->columns([
-
-                Tables\Columns\TextColumn::make('individual.fullname')
+                Tables\Columns\TextColumn::make('created_at')->label('Date Created')
+                    ->date('M d, Y - h:iA')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('individual.fullname')->label('Name')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\IconColumn::make('individual.isMember')->label('Member')
+                    ->alignCenter()
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('isDependent')->label('Dependent')
+                    ->icon(fn (string $state): string => match ($state) {
+                        '1' => 'heroicon-m-check-circle',
+                        '0' => 'heroicon-m-x-circle',
+
+                    })
+                    ->alignCenter()
+                    ->boolean(),
+
+                Tables\Columns\TextColumn::make('category.title')->label('Category')
+                    ->default('-')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -266,6 +370,7 @@ class TreatmentResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -274,6 +379,31 @@ class TreatmentResource extends Resource
                 ]),
             ]);
     }
+
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('')
+                    ->schema([
+                        TextEntry::make('individual.fullname')->label('Name')
+                            ->columnSpan(4)
+
+
+
+
+                    ])->columns(12)->columnSpan(5),
+
+
+
+
+
+            ])->columns(7);
+
+    }
+
 
     public static function getRelations(): array
     {
@@ -288,6 +418,25 @@ class TreatmentResource extends Resource
             'index' => Pages\ListTreatments::route('/'),
             'create' => Pages\CreateTreatment::route('/create'),
             'edit' => Pages\EditTreatment::route('/{record}/edit'),
+            'view' => Pages\ViewTreatment::route('/{record}'),
         ];
     }
+
+
+    /**
+     * @param Model $record
+     * @return string|Htmlable
+     */
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->individual->fullname;
+    }
+
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return TreatmentResource::getUrl('view', ['record' => $record]);
+    }
+
+
+
 }

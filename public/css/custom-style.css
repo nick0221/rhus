@@ -1,0 +1,17 @@
+
+.fi-body {
+    background-color: #ffffff;
+    background-image: url("../images/blob-haikei.svg");
+    background-attachment: fixed;
+
+    background-size: cover;
+}
+
+.fi-logo{
+    height: 140px!important;
+}
+
+.fi-simple-main{
+    box-shadow: 0px 0px 12px 7px rgba(0,0,0,0.1);
+}
+

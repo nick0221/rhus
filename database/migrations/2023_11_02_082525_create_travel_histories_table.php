@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('travel_histories', function (Blueprint $table) {
             $table->id();
-            $table->date('dateoftravel');
-            $table->string('place');
+            $table->date('dateoftravel')->nullable();
+            $table->string('place')->nullable();
             $table->string('daysofstay')->nullable();
             $table->foreignIdFor(\App\Models\Individual::class, 'individual_id')->nullable();
 

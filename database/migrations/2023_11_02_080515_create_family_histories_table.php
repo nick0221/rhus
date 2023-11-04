@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('family_histories', function (Blueprint $table) {
             $table->id();
-            $table->date('historyDate');
-            $table->longText('description');
+            $table->date('historyDate')->nullable();
+            $table->longText('description')->nullable();
             $table->foreignIdFor(\App\Models\Individual::class, 'individual_id')->nullable();
 
             $table->timestamps();
