@@ -31,6 +31,9 @@ class Treatment extends Model
     ];
 
 
+
+
+
     public function individual(): BelongsTo
     {
         return $this->belongsTo(Individual::class);

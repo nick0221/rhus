@@ -71,6 +71,12 @@ class Individual extends Model
     }
 
 
+    public function treatmentRecords(): HasMany
+    {
+        return $this->hasMany(Treatment::class);
+    }
+
+
 
 
 

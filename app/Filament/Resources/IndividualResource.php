@@ -433,6 +433,7 @@ class IndividualResource extends Resource
             RelationManagers\FamilyHistoriesRelationManager::class,
             RelationManagers\TravelHistoriesRelationManager::class,
             RelationManagers\ObHistoriesRelationManager::class,
+            RelationManagers\TreatmentsRelationManager::class,
         ];
     }
 
