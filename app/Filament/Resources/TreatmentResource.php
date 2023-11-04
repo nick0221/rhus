@@ -142,6 +142,10 @@ class TreatmentResource extends Resource
                             ->onIcon('heroicon-m-check')
                             ->disabled(),
 
+                        Forms\Components\TextInput::make('attendingProvider')
+                            ->placeholder('Enter the attending provider...')
+                            ->required()
+                            ->columnSpan(6),
 
 
                         Forms\Components\Select::make('category_id')
@@ -278,16 +282,65 @@ class TreatmentResource extends Resource
                                     ->maxDate(now()),
 
 
-                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(7)->collapsible()->collapsed()
+                        ])->columnSpanFull()->addable(false)->deletable(false)->columns(7)->collapsible()->collapsed(),
+
+                        Forms\Components\Repeater::make('vitalSigns')->hiddenLabel()
+                            ->itemLabel('5. Vital Signs')
+                            ->schema([
+
+                                Forms\Components\TextInput::make('bloodPressure')->label('BP:')->inlineLabel()
+                                    ->columnSpan(4)
+                                    ->suffix('mmHg')
+                                    ->maxLength(15),
+
+                                Forms\Components\TextInput::make('rr')->label('RR:')->inlineLabel()
+                                    ->columnSpan(4)
+                                    ->suffix('cpm')
+                                    ->maxLength(15),
+
+                                Forms\Components\TextInput::make('temp')->label('Temp:')->inlineLabel()
+                                    ->columnSpan(4)
+                                    ->suffix('C')
+                                    ->maxLength(15),
+
+                                Forms\Components\TextInput::make('hr')->label('HR:')->inlineLabel()
+                                    ->columnSpan(4)
+                                    ->suffix('bpm')
+                                    ->maxLength(15),
+
+                                Forms\Components\TextInput::make('pr')->label('PR:')->inlineLabel()
+                                    ->columnSpan(4)
+                                    ->suffix('bpm')
+                                    ->maxLength(15),
+
+
+                            ])->orderColumn(false)->columnSpanFull()->addable(false)->deletable(false)->columns(7)->collapsible()->collapsed(false),
 
 
 
+                        Forms\Components\Textarea::make('diagnosis')
+                            ->placeholder('Enter diagnosis...')
+                            ->rows(6)
+                            ->autosize()
+                            ->columnSpan(6),
 
+                        Forms\Components\Textarea::make('medication')
+                            ->placeholder('Enter the medication...')
+                            ->rows(6)
+                            ->autosize()
+                            ->columnSpan(6),
 
+                        Forms\Components\Textarea::make('chiefComplaints')
+                            ->placeholder('Enter the Chief Complaints...')
+                            ->rows(6)
+                            ->autosize()
+                            ->columnSpan(12),
 
 
 
                     ])->columns(12)->columnSpan(5),
+
+
 
                 Forms\Components\Section::make('')->schema([
                     Forms\Components\Toggle::make('isDependent')->label('Dependent')
@@ -297,7 +350,6 @@ class TreatmentResource extends Resource
 
                     Forms\Components\TextInput::make('phMemberName')->label('PhilHealth Member Name')
                         ->columnSpan(2)
-                        ->alpha()
                         ->required(fn (Get $get): bool => $get('isDependent'))
                         ->disabled(fn (Get $get): bool => $get('isDependent') == 0)
                         ->maxLength(255),
@@ -333,6 +385,7 @@ class TreatmentResource extends Resource
 
 
                 ])->columns(1)->columnSpan(2),
+
 
 
 
@@ -517,6 +570,43 @@ class TreatmentResource extends Resource
 
                         ])->columns(3),
 
+
+                        Fieldset::make('Vital Signs')
+                            ->schema([
+                                TextEntry::make('bloodPressure')->label('BP: ')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} mmHg")
+                                    ->inlineLabel()
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('rr')->label('RR: ')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} cpm")
+                                    ->inlineLabel()
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('temp')->label('Temp: ')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} C")
+                                    ->inlineLabel()
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('hr')->label('HR: ')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} bpm")
+                                    ->inlineLabel()
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+                                TextEntry::make('pr')->label('PR: ')
+                                    ->formatStateUsing(fn($state): string => (empty($state)) ? '-': "{$state} bpm")
+                                    ->inlineLabel()
+                                    ->weight(FontWeight::Light)
+                                    ->color('info'),
+
+
+
+
+                            ])->columns(1),
                     ])->columns(12)->columnSpan(5),
 
 

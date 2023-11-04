@@ -17,8 +17,23 @@ class Treatment extends Model
         'dependentPhilhealthNum',
         'birthday',
         'phMemberName',
+        'bloodPressure',
+        'rr',
+        'temp',
+        'hr',
+        'pr',
+        'vitalSign',
+        'diagnosis',
+        'medication',
+        'chiefComplaints',
+        'attendingProvider',
+        'vitalSign',
     ];
 
+
+    protected $casts = [
+        'vitalSign' => 'json'
+    ];
 
 
     public function individual(): BelongsTo
