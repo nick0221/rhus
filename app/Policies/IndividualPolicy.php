@@ -8,6 +8,9 @@ use App\Models\User;
 
 class IndividualPolicy
 {
+
+
+
     /**
      * Determine whether the user can view any models.
      */

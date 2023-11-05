@@ -35,7 +35,7 @@ class TreatmentResource extends Resource
 {
     protected static ?string $model = Treatment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
 
     protected static ?string $recordTitleAttribute = 'individual.fullname';
 
@@ -438,9 +438,9 @@ class TreatmentResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-//                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-//                ]),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

@@ -11,7 +11,10 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class IndividualOverview extends BaseWidget
 {
 
-
+    public static function canView(): bool
+    {
+        return true;
+    }
 
     /**
      * @return array|int|string

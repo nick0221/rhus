@@ -48,12 +48,13 @@ class TreatmentChart extends ApexChartWidget
             ->limit(15)
             ->get();
 
-        $dailyLabel = null;
-        $dataVal = null;
+        $dailyLabel = [];
+        $dataVal = [];
 
         foreach ($chartdaily as $daily){ $dailyLabel[] = $daily->dailyLabel; }
         foreach ($chartdaily as $data){ $dataVal[] =  $data->ttlCount; }
         //dd($dataVal);
+
 
 
         return [
@@ -110,4 +111,15 @@ class TreatmentChart extends ApexChartWidget
             ],
         ];
     }
+
+
+
+    public static function canView(): bool
+    {
+        return true;
+    }
+
+
+
+
 }

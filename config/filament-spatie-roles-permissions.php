@@ -103,11 +103,12 @@ return [
          * Define excluded_models in snake-case
          */
         'excluded_models' => [
-            //
+
         ],
 
         'excluded_policy_models' => [
             \App\Models\User::class,
+
 
         ],
 
