@@ -4,11 +4,14 @@ namespace App\Filament\Resources\IndividualResource\Widgets;
 
 use App\Models\Individual;
 use App\Models\Treatment;
+
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class IndividualOverview extends BaseWidget
 {
+
+
 
     /**
      * @return array|int|string

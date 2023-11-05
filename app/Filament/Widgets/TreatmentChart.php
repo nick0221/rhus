@@ -2,11 +2,13 @@
 
 namespace App\Filament\Widgets;
 
+
 use Illuminate\Support\Facades\DB;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class TreatmentChart extends ApexChartWidget
 {
+
 
     protected int | string | array $columnSpan = '2';
 
@@ -24,6 +26,9 @@ class TreatmentChart extends ApexChartWidget
      * @var string|null
      */
     protected static ?string $heading = 'No. of Treatments recorded (Daily)';
+
+
+
 
     /**
      * Chart options (series, labels, types, size, animations...)
