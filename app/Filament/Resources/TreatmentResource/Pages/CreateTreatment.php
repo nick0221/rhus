@@ -11,8 +11,8 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateTreatment extends CreateRecord
 {
-    protected static string $resource = TreatmentResource::class;
 
+    protected static string $resource = TreatmentResource::class;
 
     protected ?string $heading = 'Create New Individual Treatment';
 
@@ -21,7 +21,6 @@ class CreateTreatment extends CreateRecord
     protected function afterCreate(): void
     {
         $treatmentId = $this->getRecord()->id;
-
 
         $recPastMedical = PastMedicalhistory::where('treatments_id', $treatmentId)->first();
         if (!is_null($recPastMedical->historyDate) || !is_null($recPastMedical->description)){

@@ -20,6 +20,10 @@ class ViewTreatment extends ViewRecord
         $recordsName = $this->getRecord()->individual->fullname;
 
         return [
+
+            Actions\Action::make('create')->url(route('filament.admin.resources.treatments.create'))
+                ->icon('heroicon-o-plus')
+                ->label('Create new'),
             Actions\DeleteAction::make()
                 ->modalHeading('Delete '. $recordsName. ' record')
                 ->successNotificationTitle('Treatment record of '.$recordsName.' has been successfully deleted.'),

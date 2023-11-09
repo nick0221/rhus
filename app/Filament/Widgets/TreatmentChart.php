@@ -81,7 +81,7 @@ class TreatmentChart extends ApexChartWidget
             ],
             'series' => [
                 [
-                    'name' => 'TreatmentChart',
+                    'name' => 'Treatment',
                     //'data' => [7, 4, 6, 10, 14, 7, 5, 9, 10, 15, 13, 18],
                     'data' => $dataVal,
                 ],
@@ -96,10 +96,12 @@ class TreatmentChart extends ApexChartWidget
                 ],
             ],
             'yaxis' => [
+
                 'labels' => [
                     'style' => [
                         'fontFamily' => 'inherit',
                     ],
+
                 ],
             ],
             'colors' => ['#38E54D'],
