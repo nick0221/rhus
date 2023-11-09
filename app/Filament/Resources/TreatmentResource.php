@@ -116,6 +116,21 @@ class TreatmentResource extends Resource
                                         ->suffix('kg.')
                                         ->columnSpan(3),
 
+                                    Forms\Components\Toggle::make('isMember')
+                                        ->inline(false)
+                                        ->onIcon('heroicon-m-check')
+                                        ->live(onBlur: true)
+                                        ->columnSpan(2)
+                                        ->columnStart(1)
+                                        ->required(),
+
+                                    Forms\Components\TextInput::make('philhealthnum')->label('Philhealth Number')
+                                        ->columnSpan(4)
+                                        ->numeric()
+                                        ->required(fn (Get $get): bool => $get('isMember'))
+                                        ->maxLength(255),
+
+
 
                                 ])->columns(12)
 
