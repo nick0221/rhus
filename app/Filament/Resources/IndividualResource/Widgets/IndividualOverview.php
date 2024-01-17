@@ -29,7 +29,7 @@ class IndividualOverview extends BaseWidget
         $ttlTreatmentToday = Treatment::whereDate('created_at', now()->toDate())->count();
 
         return [
-            Stat::make('Total Individuals Recorded', $ttlInd)
+            Stat::make('Total Patient Recorded', $ttlInd)
                 ->extraAttributes(['class' => '']),
 
             Stat::make('Total Treatments Recorded', $ttlTreatment)

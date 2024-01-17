@@ -144,7 +144,7 @@ class TreatmentResource extends Resource
                                     ->modalSubmitActionLabel('Save')
                                     ->icon('heroicon-o-user-plus')
                             )
-                            ->createOptionModalHeading('REGISTER NEW')
+                            ->createOptionModalHeading('REGISTER NEW PATIENT')
                             ->required(),
 
                         Forms\Components\TextInput::make('phNumber')->label('PhilHealth Number')

@@ -32,13 +32,13 @@ class IndividualResource extends Resource
 
     protected static ?string $modelLabel = 'Individual Treatment';
 
-    protected static ?string $navigationLabel = 'Patient Profiles';
+    protected static ?string $navigationLabel = 'Patient Records';
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'fullname';
 
-    protected static ?string $pluralModelLabel = 'Patient Profiles';
+    protected static ?string $pluralModelLabel = 'Patient Records';
 
     protected static int $globalSearchResultsLimit = 10;
 
