@@ -14,7 +14,7 @@ class CreateTreatment extends CreateRecord
 
     protected static string $resource = TreatmentResource::class;
 
-    protected ?string $heading = 'Create New Individual Treatment';
+    protected ?string $heading = 'New Individual Treatment';
 
 
 

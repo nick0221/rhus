@@ -19,7 +19,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static bool $shouldRegisterNavigation = false;
+    //protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -50,7 +50,7 @@ class UserResource extends Resource
                             ->relationship('roles', 'name')
                     ])->columns(6)->columnSpan(5)
 
-            ])->columns(6);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -65,9 +65,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('roles.name')->label('Role Access')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -102,7 +100,7 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            //'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

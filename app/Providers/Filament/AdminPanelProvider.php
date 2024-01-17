@@ -21,12 +21,14 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->passwordReset()
             ->topNavigation()
             ->favicon(asset('images/brandlogo_icon.ico'))
             ->brandLogo(asset('images/brandlogo.png'))
@@ -69,7 +71,8 @@ class AdminPanelProvider extends PanelProvider
             ])
 
             ->plugins([
-                FilamentSpatieRolesPermissionsPlugin::make()
+                FilamentSpatieRolesPermissionsPlugin::make(),
+                SimpleLightBoxPlugin::make(),
 
 
             ]);

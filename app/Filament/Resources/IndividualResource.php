@@ -32,13 +32,13 @@ class IndividualResource extends Resource
 
     protected static ?string $modelLabel = 'Individual Treatment';
 
-    protected static ?string $navigationLabel = 'Individuals';
+    protected static ?string $navigationLabel = 'Patient Profiles';
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'fullname';
 
-    protected static ?string $pluralModelLabel = 'Individuals';
+    protected static ?string $pluralModelLabel = 'Patient Profiles';
 
     protected static int $globalSearchResultsLimit = 10;
 
@@ -133,10 +133,10 @@ class IndividualResource extends Resource
 
                        ])->columnSpan(7)->columns(2),
 
-                       Forms\Components\Fieldset::make('Educational Attainment')->schema([
-                            Forms\Components\TextInput::make('educAttainment')->hiddenLabel()
-                               ->columnSpan(3),
-                       ])->columnSpan(4),
+//                       Forms\Components\Fieldset::make('Educational Attainment')->schema([
+//                            Forms\Components\TextInput::make('educAttainment')->hiddenLabel()
+//                               ->columnSpan(3),
+//                       ])->columnSpan(4),
 
 
 
@@ -168,7 +168,7 @@ class IndividualResource extends Resource
 
                     Forms\Components\TextInput::make('mobile')
                         ->autocomplete(false)
-                        ->prefix('+639')
+                        ->prefix('+63')
                         ->placeholder('9** *** ****')
                         ->mask('999 999 9999')
                         ->maxLength(12),
@@ -188,6 +188,9 @@ class IndividualResource extends Resource
         return $table
             ->defaultSort('created_at', 'DESC')
             ->columns([
+                Tables\Columns\TextColumn::make('index')->label('#')->rowIndex()
+                    ->alignCenter(),
+
                 Tables\Columns\IconColumn::make('isMember')->label('Member')
                     ->alignCenter()
                     ->boolean(),
@@ -195,8 +198,8 @@ class IndividualResource extends Resource
                 Tables\Columns\ImageColumn::make('image')->label('Img')
                     ->alignCenter()
                     ->circular()
-                    ->extraImgAttributes(['loading' => 'lazy'])
-                    ->defaultImageUrl(asset('images/default-image.png')),
+                    ->defaultImageUrl(asset('images/default-image.png'))
+                    ->simpleLightbox(),
 
                 Tables\Columns\TextColumn::make('fullname')->label('Name')
                     ->searchable(['firstname', 'middlename', 'lastname', 'fullname']),
@@ -377,14 +380,7 @@ class IndividualResource extends Resource
                                 ->default('-'),
                         ])->columns(2)->columnSpanFull(),
 
-                         Fieldset::make('Educational Attainment')->schema([
-                             TextEntry::make('educAttainment')->hiddenLabel()
-                                 ->weight(FontWeight::Light)
-                                 ->color('info')
-                                 ->default('-'),
 
-
-                         ])->columns(2)->columnSpanFull()
 
 
 
@@ -397,6 +393,7 @@ class IndividualResource extends Resource
                         ->columnSpanFull()
                         ->circular()
                         ->height('240px')
+                        ->simpleLightbox()
                         ->defaultImageUrl(asset('images/default-image.png')),
 
                     TextEntry::make('created_at')->label('Created')

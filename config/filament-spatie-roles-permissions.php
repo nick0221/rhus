@@ -15,8 +15,8 @@ return [
      * Set as false to remove from navigation.
      */
     'should_register_on_navigation' => [
-        'permissions' => false,
-        'roles' => false,
+        'permissions' => true,
+        'roles' => true,
     ],
 
     'guard_names' => [
