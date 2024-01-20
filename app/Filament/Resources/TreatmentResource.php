@@ -39,6 +39,8 @@ class TreatmentResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'individual.fullname';
 
+    protected static ?string $pluralModelLabel = 'Treatment Records';
+
     public static function form(Form $form): Form
     {
         return $form
