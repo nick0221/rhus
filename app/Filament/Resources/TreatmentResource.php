@@ -372,7 +372,9 @@ class TreatmentResource extends Resource
                                     ->placeholder('mm/dd/yyyy hh:mm')
                                     ->timezone('Asia/Manila'),
 
-
+                                Forms\Components\Textarea::make('remarksNote')
+                                    ->rows(6)
+                                    ->autosize(),
 
 
 
