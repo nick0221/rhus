@@ -57,6 +57,7 @@ class TreatmentResource extends Resource
                                 $ind = Individual::find($state);
                                 $set('phNumber', $ind?->philhealthnum ?? '-');
                                 $set('isMember', $ind?->isMember ?? false);
+                                $set('individual_id', 'sample');
 
                             })
                             ->debounce(100)
@@ -360,6 +361,7 @@ class TreatmentResource extends Resource
 
 
                         Forms\Components\Repeater::make('followupCheckup')->hiddenLabel()
+                            ->deletable(false)
                             ->itemLabel('Follow-up Checkup Details(If applicable)')
                             ->relationship()
                             ->schema([
@@ -375,6 +377,8 @@ class TreatmentResource extends Resource
                                 Forms\Components\Textarea::make('remarksNote')
                                     ->rows(6)
                                     ->autosize(),
+
+                                Forms\Components\TextInput::make('individual_id'),
 
 
 
