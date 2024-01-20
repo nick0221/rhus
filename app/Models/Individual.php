@@ -77,6 +77,10 @@ class Individual extends Model
     }
 
 
+    public function followupCheckup(): HasMany
+    {
+        return $this->hasMany(FollowupCheckup::class);
+    }
 
 
 

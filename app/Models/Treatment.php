@@ -70,6 +70,14 @@ class Treatment extends Model
     }
 
 
+    public function followupCheckup(): BelongsTo
+    {
+        return $this->belongsTo(FollowupCheckup::class);
+    }
+
+
+
+
 
 
 
