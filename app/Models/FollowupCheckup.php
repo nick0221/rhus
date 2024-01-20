@@ -15,6 +15,7 @@ class FollowupCheckup extends Model
         'individual_id',
         'treatment_id',
         'remarksNote',
+        'followupStatus',
     ];
 
 
