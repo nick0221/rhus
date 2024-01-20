@@ -359,6 +359,27 @@ class TreatmentResource extends Resource
 
 
 
+                        Forms\Components\Repeater::make('followupCheckup')->hiddenLabel()
+                            ->itemLabel('Follow-up Checkup Details(If applicable)')
+                            ->relationship()
+                            ->schema([
+                                Forms\Components\DateTimePicker::make('followupDate')
+                                    ->minutesStep(10)
+                                    ->native(false)
+                                    ->seconds(false)
+                                    ->minDate(now())
+                                    ->displayFormat('m/d/Y h:i A')
+                                    ->placeholder('mm/dd/yyyy hh:mm')
+                                    ->timezone('Asia/Manila'),
+
+
+
+
+
+                            ])->columnSpan(12)->maxItems(1),
+
+
+
                     ])->columns(12)->columnSpan(5),
 
 

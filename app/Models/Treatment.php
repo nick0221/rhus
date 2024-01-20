@@ -70,9 +70,9 @@ class Treatment extends Model
     }
 
 
-    public function followupCheckup(): BelongsTo
+    public function followupCheckup(): HasMany
     {
-        return $this->belongsTo(FollowupCheckup::class);
+        return $this->hasMany(FollowupCheckup::class);
     }
 
 
