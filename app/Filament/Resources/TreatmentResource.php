@@ -473,6 +473,15 @@ class TreatmentResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+
+                Tables\Columns\TextColumn::make('followupCheckup.followupDate')->label('Followup Date')
+                    ->date('M d, Y - h:i A')
+                    ->alignCenter(),
+
+                Tables\Columns\TextColumn::make('followupCheckup.followupStatus')->label('Followup Status')
+                    ->alignCenter()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -680,6 +689,27 @@ class TreatmentResource extends Resource
                                 ->color('info'),
                         ])->columnSpan(12),
 
+
+
+                        Fieldset::make('Chief Complaints')->schema([
+                            RepeatableEntry::make('followupCheckup')->hiddenLabel()
+
+                                ->schema([
+                                    TextEntry::make('followupDate')->label('Followup date')
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
+
+                                    TextEntry::make('remarksNote')->label('Remarks/Notes')
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
+
+                                    TextEntry::make('followupStatus')->label('Remarks/Notes')
+                                        ->weight(FontWeight::Light)
+                                        ->color('info'),
+
+
+                                ])->columnSpanFull()
+                        ])->columnSpan(12),
 
 
 
