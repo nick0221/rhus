@@ -16,7 +16,7 @@ return [
      */
     'should_register_on_navigation' => [
         'permissions' => false,
-        'roles' => true,
+        'roles' => false,
     ],
 
     'guard_names' => [

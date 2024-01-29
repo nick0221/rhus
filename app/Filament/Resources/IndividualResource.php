@@ -186,9 +186,9 @@ class IndividualResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'DESC')
+            ->defaultSort('id', 'DESC')
             ->columns([
-                Tables\Columns\TextColumn::make('index')->label('#')->rowIndex()
+                Tables\Columns\TextColumn::make('patientRef')->label('Ref#')
                     ->alignCenter(),
 
                 Tables\Columns\IconColumn::make('isMember')->label('Member')
@@ -395,6 +395,13 @@ class IndividualResource extends Resource
                         ->height('240px')
                         ->simpleLightbox()
                         ->defaultImageUrl(asset('images/default-image.png')),
+
+
+                    TextEntry::make('patientRef')->label('Ref#')
+                        ->default('-')
+                        ->weight(FontWeight::Light)
+                        ->columnSpanFull()
+                        ->color('info'),
 
                     TextEntry::make('created_at')->label('Created')
                         ->dateTime('M d, Y - h:iA')

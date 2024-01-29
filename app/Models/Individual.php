@@ -27,14 +27,13 @@ class Individual extends Model
         'philhealthnum',
         'isMember',
         'image',
-        //'category_id',
         'mobile',
         'educAttainment',
         'guardianName',
         'placeofbirth',
         'occupation',
         'guardianContact',
-
+        'patientRef',
     ];
 
 
@@ -88,6 +87,7 @@ class Individual extends Model
     {
         static::created(function ($ind) {
             $ind->fullname = (ucfirst($ind->firstname) .' '.ucfirst($ind->middlename).' '.ucfirst($ind->lastname).' '.ucfirst($ind->extname));
+            $ind->patientRef = "PR".str_pad($ind->id, 5, 0, STR_PAD_LEFT);
             $ind->save();
         });
 
