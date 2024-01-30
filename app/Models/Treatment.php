@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -76,7 +77,28 @@ class Treatment extends Model
     }
 
 
+    public function markDone($record): void
+    {
+        $followupCheckupRecord = FollowupCheckup::where('treatment_id', $record->id)->first();
+        $followupCheckupRecord->followupStatus = 1;
+        $followupCheckupRecord->save();
 
+
+        Notification::make()
+            ->title('Confirmation')
+            ->body("Treatment record has been successfully mark as done.")
+            ->icon('heroicon-o-check-badge')
+            ->actions([
+                \Filament\Notifications\Actions\Action::make('view')->label('View record')
+                    ->button()->outlined()
+                    ->url(fn (): string => route('filament.admin.resources.treatments.view', ['record' => $record])),
+
+
+            ])
+            ->success()
+            ->send();
+
+    }
 
 
 

@@ -191,7 +191,7 @@ class IndividualResource extends Resource
                 Tables\Columns\TextColumn::make('patientRef')->label('Ref#')
                     ->alignCenter(),
 
-                Tables\Columns\IconColumn::make('isMember')->label('Member')
+                Tables\Columns\IconColumn::make('isMember')->label('Ph Member')
                     ->alignCenter()
                     ->boolean(),
 

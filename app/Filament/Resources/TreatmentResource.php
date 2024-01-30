@@ -6,11 +6,13 @@ use App\Enums\CivilStatusesEnum;
 use App\Enums\GenderEnum;
 use App\Filament\Resources\TreatmentResource\Pages;
 use App\Filament\Resources\TreatmentResource\RelationManagers;
+use App\Models\FollowupCheckup;
 use App\Models\Individual;
 use App\Models\Treatment;
 use Carbon\Carbon;
 use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -57,7 +59,7 @@ class TreatmentResource extends Resource
                                 $ind = Individual::find($state);
                                 $set('phNumber', $ind?->philhealthnum ?? '-');
                                 $set('isMember', $ind?->isMember ?? false);
-                                $set('individual_id', 'sample');
+
 
                             })
                             ->debounce(100)
@@ -378,7 +380,7 @@ class TreatmentResource extends Resource
                                     ->rows(6)
                                     ->autosize(),
 
-                                Forms\Components\TextInput::make('individual_id'),
+
 
 
 
@@ -479,16 +481,50 @@ class TreatmentResource extends Resource
                     ->date('M d, Y - h:i A')
                     ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('followupCheckup.followupStatus')->label('Followup Status')
+                Tables\Columns\TextColumn::make('followupCheckup.followupStatus')->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        '0' => 'warning',
+                        '1' => 'success',
+                        '2' => 'danger',
+                    })
                     ->alignCenter()
+                    ->formatStateUsing(fn (string $state): string => match ($state){
+                        '0' => 'To follow',
+                        '1' => 'Done',
+                        '2' => 'Not showed',
+                    })
                     ->sortable(),
+
+
+
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\Action::make('markdone')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->label('Mark as done')
+                        ->requiresConfirmation()
+                        ->closeModalByClickingAway(false)
+                        ->hidden(function (Treatment $record){
+                            if($record->followupCheckup[0]->followupStatus == 1){
+                                return true;
+                            }else{
+                                return false;
+                            }
+
+                        })
+                        ->action(function (Treatment $record){
+                            $record->markDone($record);
+                        })
+
+                ])->tooltip('See actions'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -691,21 +727,34 @@ class TreatmentResource extends Resource
 
 
 
-                        Fieldset::make('Chief Complaints')->schema([
+                        Fieldset::make('Followup details')->schema([
                             RepeatableEntry::make('followupCheckup')->hiddenLabel()
 
                                 ->schema([
                                     TextEntry::make('followupDate')->label('Followup date')
                                         ->weight(FontWeight::Light)
+                                        ->dateTime('M d, Y - h:i A')
                                         ->color('info'),
 
                                     TextEntry::make('remarksNote')->label('Remarks/Notes')
                                         ->weight(FontWeight::Light)
                                         ->color('info'),
 
-                                    TextEntry::make('followupStatus')->label('Remarks/Notes')
-                                        ->weight(FontWeight::Light)
-                                        ->color('info'),
+                                    TextEntry::make('followupStatus')->label('Status')
+                                        ->color(fn (string $state): string => match ($state) {
+                                            '0' => 'warning',
+                                            '1' => 'success',
+                                            '2' => 'danger',
+                                        })
+                                        ->formatStateUsing(fn (string $state): string => match ($state){
+                                            '0' => 'To follow',
+                                            '1' => 'Done',
+                                            '2' => 'Not showed',
+                                        })
+                                        ->badge()
+                                        ->weight(FontWeight::Light),
+
+
 
 
                                 ])->columnSpanFull()

@@ -7,6 +7,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -57,7 +58,9 @@ class TreatmentsRelationManager extends RelationManager
                 //Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-
+                Action::make('view')->label('View more details')
+                    ->url(fn (Treatment $record): string => route('filament.admin.resources.treatments.view', $record))
+                    ->openUrlInNewTab()
             ])
             ->bulkActions([
 //                Tables\Actions\BulkActionGroup::make([

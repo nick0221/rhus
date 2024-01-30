@@ -28,7 +28,7 @@ class TreatmentChart extends ApexChartWidget
     protected static ?string $heading = 'No. of Treatments recorded (Daily)';
 
 
-
+    protected static ?int $sort = 1;
 
     /**
      * Chart options (series, labels, types, size, animations...)
