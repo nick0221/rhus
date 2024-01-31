@@ -26,11 +26,13 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
+
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 
 class TreatmentResource extends Resource
@@ -42,6 +44,7 @@ class TreatmentResource extends Resource
     protected static ?string $recordTitleAttribute = 'individual.fullname';
 
     protected static ?string $pluralModelLabel = 'Treatment Records';
+
 
     public static function form(Form $form): Form
     {
@@ -529,6 +532,18 @@ class TreatmentResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+//                    Tables\Actions\BulkAction::make('markDone')
+//                        ->icon('heroicon-o-check-circle')
+//                        ->color('success')
+//                        ->label('Mark the selected done')
+//                        ->action(function (Collection $records){
+//                            $records->each(function ($record){
+//                                $record->followupCheckup[0]->followupStatus = 1;
+//                                $record->save();
+//                            });
+//                        })
+//                        ->requiresConfirmation()
+//                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
