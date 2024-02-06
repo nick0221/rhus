@@ -50,45 +50,46 @@ class IndividualResource extends Resource
                     ->description('Fill out all the required(*) fields.')
                     ->schema([
                         Forms\Components\TextInput::make('firstname')
-                        ->autocapitalize('words')
-                        ->columnSpan(2)
-                        ->autocomplete(false)
-                        ->required()
-                        ->placeholder('Enter the firstname')
-                        ->maxLength(255),
+                            ->autocapitalize('words')
+                            ->columnSpan(2)
+                            ->autocomplete(false)
+                            ->required()
+                            ->placeholder('Enter the firstname')
+                            ->maxLength(255),
 
                         Forms\Components\TextInput::make('lastname')
-                        ->autocapitalize('words')
-                        ->columnSpan(2)
-                        ->autocomplete(false)
-                        ->required()
-                        ->placeholder('Enter the lastname')
-                        ->maxLength(255),
+                            ->autocapitalize('words')
+                            ->columnSpan(2)
+                            ->autocomplete(false)
+                            ->required()
+                            ->placeholder('Enter the lastname')
+                            ->maxLength(255),
 
                         Forms\Components\TextInput::make('middlename')
-                        ->autocapitalize('words')
-                        ->columnSpan(2)
-                        ->autocomplete(false)
-                        ->placeholder('Enter the middlename')
-                        ->maxLength(255),
+                            ->autocapitalize('words')
+                            ->columnSpan(2)
+                            ->required()
+                            ->autocomplete(false)
+                            ->placeholder('Enter the middlename')
+                            ->maxLength(255),
 
                         Forms\Components\TextInput::make('extname')
-                        ->columnSpan(1)
-                        ->autocomplete(false)
-                        ->placeholder('e.g(Jr.) ')
-                        ->maxLength(255),
+                            ->columnSpan(1)
+                            ->autocomplete(false)
+                            ->placeholder('e.g(Jr.) ')
+                            ->maxLength(255),
 
                         Forms\Components\Select::make('gender')
-                        ->options(GenderEnum::getValues())
-                        ->placeholder('------')
-                        ->columnSpan(2)
-                        ->required(),
+                            ->options(GenderEnum::getValues())
+                            ->placeholder('------')
+                            ->columnSpan(2)
+                            ->required(),
 
                         Forms\Components\Select::make('civilstatus')
-                        ->columnSpan(2)
-                        ->required()
-                        ->placeholder('------')
-                        ->options(CivilStatusesEnum::getValues()),
+                            ->columnSpan(2)
+                            ->required()
+                            ->placeholder('------')
+                            ->options(CivilStatusesEnum::getValues()),
 
                         Forms\Components\Toggle::make('isMember')
                             ->inline(false)
@@ -104,13 +105,13 @@ class IndividualResource extends Resource
                             ->maxLength(255),
 
                         Forms\Components\DatePicker::make('birthdate')
-                        ->placeholder('M d, YYYY')
-                        ->maxDate(now())
-                        ->closeOnDateSelection()
-                        ->native(false)
-                        ->required()
-                        ->suffixIcon('heroicon-o-calendar')
-                        ->columnSpan(2),
+                            ->placeholder('M d, YYYY')
+                            ->maxDate(now())
+                            ->closeOnDateSelection()
+                            ->native(false)
+                            ->required()
+                            ->suffixIcon('heroicon-o-calendar')
+                            ->columnSpan(2),
 
 
                         Forms\Components\Textarea::make('placeofbirth')
@@ -119,6 +120,7 @@ class IndividualResource extends Resource
                             ->columnSpan(3),
 
                         Forms\Components\Textarea::make('address')->label('Residing Address')
+                            ->required()
                             ->rows(2)
                             ->autosize()
                             ->columnSpan(4),
@@ -127,9 +129,9 @@ class IndividualResource extends Resource
                             ->columnSpan(3),
 
                        Forms\Components\Fieldset::make('Guardian Information')->schema([
-                            Forms\Components\TextInput::make('guardianName'),
+                            Forms\Components\TextInput::make('guardianName')->required(),
 
-                           Forms\Components\TextInput::make('guardianContact'),
+                           Forms\Components\TextInput::make('guardianContact')->required(),
 
                        ])->columnSpan(7)->columns(2),
 
@@ -169,6 +171,7 @@ class IndividualResource extends Resource
                     Forms\Components\TextInput::make('mobile')
                         ->autocomplete(false)
                         ->prefix('+63')
+                        ->required()
                         ->placeholder('9** *** ****')
                         ->mask('999 999 9999')
                         ->maxLength(12),

@@ -12,6 +12,8 @@ use App\Models\Treatment;
 use Carbon\Carbon;
 use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -25,6 +27,9 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Table;
 
 use Illuminate\Contracts\Support\Htmlable;
@@ -34,6 +39,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Malzariey\FilamentDaterangepickerFilter\Fields\DateRangePicker;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Symfony\Component\Finder\Iterator\DateRangeFilterIterator;
 
 class TreatmentResource extends Resource
 {
@@ -371,8 +382,8 @@ class TreatmentResource extends Resource
                             ->relationship()
                             ->schema([
                                 Forms\Components\DateTimePicker::make('followupDate')
-                                    ->minutesStep(10)
                                     ->native(false)
+                                    ->minutesStep(10)
                                     ->seconds(false)
                                     ->minDate(now())
                                     ->displayFormat('m/d/Y h:i A')
@@ -448,6 +459,7 @@ class TreatmentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'DESC')
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')->label('Date Created')
                     ->date('M d, Y h:iA')
@@ -474,37 +486,105 @@ class TreatmentResource extends Resource
                     ->default('-')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
 
                 Tables\Columns\TextColumn::make('followupCheckup.followupDate')->label('Followup Date')
                     ->date('M d, Y - h:i A')
                     ->alignCenter(),
 
                 Tables\Columns\TextColumn::make('followupCheckup.followupStatus')->label('Status')
-                    ->badge()
+                    ->badge(function (Treatment $record){
+                        if($record->followupCheckup[0]->followupStatus >  0){
+                            return true;
+                        }else{
+                            return false;
+                        }
+
+                    })
                     ->color(fn (string $state): string => match ($state) {
-                        '0' => 'warning',
+                        '3' => 'warning',
                         '1' => 'success',
                         '2' => 'danger',
+                        '0' => '',
                     })
                     ->alignCenter()
                     ->formatStateUsing(fn (string $state): string => match ($state){
-                        '0' => 'To follow',
+                        '0' => '-',
                         '1' => 'Done',
                         '2' => 'Not showed',
+                        '3' => 'To follow',
                     })
                     ->sortable(),
+
+                //Tables\Columns\TextColumn::make('vitalSign')
+                 //   ->formatStateUsing(fn (array $state) => dump($state))
+                Tables\Columns\TextColumn::make('followupCheckup.remarksNote')->label('Notes/Remarks'),
+                Tables\Columns\TextColumn::make('diagnosis')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('medication')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('chiefComplaints')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+
 
 
 
             ])
             ->filters([
-                //
-            ])
+                DateRangeFilter::make('created_at')->label('Date Created')
+                    ->placeholder('Select date range')
+                    ->withIndicator()
+                    ->useRangeLabels()
+                    ->timezone('Asia/Manila')
+                    ->setAutoApplyOption(true),
+
+
+
+                Filter::make('followup')
+                    ->form([
+                        DatePicker::make('checkupDate')->label('Followup Checkup')
+                            ->placeholder('Select date')
+                            ->closeOnDateSelection()
+                            ->format('Y-m-d')
+                            ->native(false),
+
+                    ])
+                    ->baseQuery(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['checkupDate'],
+                                fn (Builder $query, $date): Builder =>  $query
+                                    ->select('treatments.*', 'followupStatus', 'followupDate')
+                                    ->whereDate('followup_checkups.followupDate', '=', $date)
+                                    ->leftjoin('followup_checkups', 'followup_checkups.treatment_id', '=', 'treatments.id'),
+                            );
+
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! $data['checkupDate']) {
+                            return null;
+                        }
+
+                        return 'Followup Checkup: ' . Carbon::parse($data['checkupDate'])->toFormattedDateString();
+                    }),
+
+                Tables\Filters\SelectFilter::make('followupStat')->label('Followup Status')
+                     ->options([
+                         '1' => 'Done',
+                         '2' => 'Not Show',
+                         '3' => 'To Follow',
+                     ])
+                     ->modifyQueryUsing(function (Builder $query, $state) {
+                         if (! $state['value']) {
+                             return $query;
+                         }
+                         return $query->whereHas('followupCheckup', fn($query) => $query->where('followupStatus', $state['value']));
+                     }),
+
+
+            ], layout: FiltersLayout::AboveContent)->filtersFormColumns(3)
+
+
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
@@ -532,6 +612,34 @@ class TreatmentResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+//                    ExportBulkAction::make()->exports([
+//                        ExcelExport::make()->fromTable()
+//                            ->withColumns([
+//                                Column::make('individual.isMember')->heading('Is Member')
+//                                    ->formatStateUsing(fn ($state) => ($state === 1) ? 'Yes':'No'),
+//
+//                                Column::make('isDependent')->heading('Is Dependent')
+//                                    ->formatStateUsing(fn ($state) => ($state === 1) ? 'Yes':'No'),
+//
+//                                Column::make('individual.philhealthnum')->heading('Phil Health Number'),
+//                                Column::make('vitalSign')->heading('Vitals'),
+//                                Column::make('diagnosis')->heading('Diagnosis'),
+//                                Column::make('medication')->heading('Medication'),
+//                                Column::make('chiefComplaints')->heading('Chief Complaints'),
+//                                Column::make('attendingProvider')->heading('Attending Provider'),
+//                                Column::make('dependentPhilHealthNum')->heading('Dependent\'s Phil Health Number (if Dependent)'),
+//                                Column::make('birthday')->heading('Dependent\'s Birthday'),
+//                                Column::make('phMemberName')->heading('Dependent\'s Member Name'),
+//
+//                            ])
+//                            ->except(['individuals.create_at', 'individuals.id', 'treatments.id', 'name', 'id'])
+//                            ->withFilename(fn () => 'ExportedTreatmentRecords-'.now()->toDateString())
+//                            ->modifyQueryUsing(fn ($query) => $query
+//                                ->select('treatments.*', 'individuals.*', )
+//                                ->leftjoin('followup_checkups', 'followup_checkups.treatment_id', '=', 'treatments.id')
+//                                ->leftjoin('individuals', 'individuals.id', '=', 'treatments.individual_id')
+//                            )
+//                    ])
 //                    Tables\Actions\BulkAction::make('markDone')
 //                        ->icon('heroicon-o-check-circle')
 //                        ->color('success')
@@ -757,15 +865,18 @@ class TreatmentResource extends Resource
 
                                     TextEntry::make('followupStatus')->label('Status')
                                         ->color(fn (string $state): string => match ($state) {
-                                            '0' => 'warning',
+                                            '3' => 'warning',
                                             '1' => 'success',
                                             '2' => 'danger',
+                                            '0' => '',
                                         })
                                         ->formatStateUsing(fn (string $state): string => match ($state){
-                                            '0' => 'To follow',
+                                            '3' => 'To follow',
                                             '1' => 'Done',
                                             '2' => 'Not showed',
+                                            '0' => '',
                                         })
+                                        ->default('-')
                                         ->badge()
                                         ->weight(FontWeight::Light),
 

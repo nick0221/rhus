@@ -16,9 +16,10 @@ class FollowupCheckup extends Model
         'treatment_id',
         'remarksNote',
         'followupStatus',
+
     ];
 
-
+    public $timestamps = false;
 
 
     public function individual(): BelongsTo

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TreatmentResource\Pages;
 
 use App\Filament\Resources\TreatmentResource;
 use App\Models\FamilyHistory;
+use App\Models\FollowupCheckup;
 use App\Models\PastMedicalhistory;
 use App\Models\TravelHistory;
 use Filament\Actions;
@@ -42,6 +43,13 @@ class CreateTreatment extends CreateRecord
             $recTravelHistory->save();
         }
 
+
+
+        $recFollowUpCheckup = FollowupCheckup::where('treatment_id', $treatmentId)->first();
+        if (!is_null($recFollowUpCheckup->followupDate)){
+            $recFollowUpCheckup->followupStatus = 3;
+            $recFollowUpCheckup->save();
+        }
 
 
 

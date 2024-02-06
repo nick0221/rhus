@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Treatment::class, 'treatment_id')->nullable();
             $table->string('remarksNote')->nullable();
             $table->string('followupStatus')->default(0);
-            $table->timestamps();
+            //$table->timestamps();
         });
     }
 

@@ -29,21 +29,35 @@ class IndividualOverview extends BaseWidget
         $ttlTreatment = Treatment::count();
         $ttlTreatmentToday = Treatment::whereDate('created_at', now()->toDate())->count();
         $followupCheckupToday = FollowupCheckup::whereDate('followupDate', now()->toDateString())
-            ->where('followupStatus', 0)
+            ->where('followupStatus', 3)
             ->count();
+
+        $dateToday = date('d/m/Y');
+        $filterTodayStr = urldecode("tableFilters%5Bcreated_at%5D%5Bcreated_at%5D");
+        $param = urlencode("{$dateToday} - {$dateToday}");
+
+
+        $dateTodayFollowup = date('M d,Y');
+        $followupfilterTodayStr = urldecode("tableFilters%5Bfollowup%5D%5BcheckupDate%5D");
+        $param2 = urlencode("{$dateTodayFollowup}");
 
 
         return [
             Stat::make('Total Patient Recorded', $ttlInd)
+                ->url(route('filament.admin.resources.individuals.index'))
                 ->extraAttributes(['class' => '']),
 
             Stat::make('Total Treatments Recorded', $ttlTreatment)
+                ->url(route('filament.admin.resources.treatments.index'))
                 ->extraAttributes(['class' => '']),
 
             Stat::make('Total Treatments Today', $ttlTreatmentToday)
+                ->url(route('filament.admin.resources.treatments.index', [($filterTodayStr) => urldecode($param)]))
                 ->extraAttributes(['class' => '']),
 
             Stat::make('No. of To Followup Checkup Today', $followupCheckupToday)
+                ->url(route('filament.admin.resources.treatments.index', [($followupfilterTodayStr) => urldecode($param2)]))
+
                 ->extraAttributes(['class' => '']),
 
         ];
