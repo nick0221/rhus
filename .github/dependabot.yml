@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Enable version updates for Composer dependencies
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "nick0221"
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "/"
+    rebase-strategy: "auto"
+    # Group minor and patch updates
+    groups:
+      security-updates:
+        dependency-types:
+          - "direct"
+          - "indirect"
+        update-types:
+          - "patch"
+          - "minor"
+        patterns:
+          - "guzzlehttp/*"
+          - "laravel/*"
+          - "symfony/*"
