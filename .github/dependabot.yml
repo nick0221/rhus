@@ -21,9 +21,6 @@ updates:
     # Group minor and patch updates
     groups:
       security-updates:
-        dependency-types:
-          - "direct"
-          - "indirect"
         update-types:
           - "patch"
           - "minor"
